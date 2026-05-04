@@ -46,6 +46,7 @@ async function generateContent(messages, apiKey) {
     try{
 
         drafts = JSON.parse(clean);
+        
     }catch(error){
 
         console.log("Error al parsear respuesta: ", error);

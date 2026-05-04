@@ -26,10 +26,11 @@ async function main() {
     console.log("\n=== TWITTER ===");
     console.log(drafts.twitter);
 }
+
 // Paso 4: utilizamos cron para contar los dias de la semana y verificamos q sea correcto, para enviar el informe semanal
 cron.schedule("0 18 * * 5", async() => { 
     // 0-> minutos, 18-> hora, *-> valores nulos, 5-> dia de la semana en este caso viernes (0 = domingo, ..., 5 = viernes)
-    
+
     try{
 
         await main();
