@@ -4,23 +4,22 @@
 
 const { Client, GatewayIntentBits, Events } = require("discord.js");
 
-const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds, //permiso a ver el server
-        GatewayIntentBits.GuildMessages, //permiso a mensajes de los niembros
-        GatewayIntentBits.MessageContent //permiso a el contenido de los mensajes
-    ]
-});
+// Definimos los permisos que vamos a reutilizar
+const botIntents = [
+    GatewayIntentBits.Guilds, // permiso a ver el server
+    GatewayIntentBits.GuildMessages, // permiso a mensajes de los miembros
+    GatewayIntentBits.MessageContent // permiso a el contenido de los mensajes
+];
 
+// Función original modificada (ahora crea su propio cliente)
 async function collectMessages(token, channelId) {
-
-    // 1. Conectar el bot a Discord
+    const client = new Client({ intents: botIntents });
     await client.login(token);
 
     // 2. Esperar a que el bot esté listo
     await new Promise(resolve => {
         client.once(Events.ClientReady, () => {
-            console.log("Bot conectado como:", client.user.tag);
+            console.log("Bot conectado para recolectar mensajes como:", client.user.tag);
             resolve();
         });
     });
@@ -51,11 +50,43 @@ async function collectMessages(token, channelId) {
 
     })).filter(msg => msg.date.getTime() > sevenDays); //.getTime() para cambiar a milisegundos la variable
 
-    // 7. Desconectar el bot
     client.destroy();
 
     return result;
 }
 
-// Exportar la función para usarla desde index.js
-module.exports = { collectMessages };
+// Nueva función para listar canales (también crea su propio cliente)
+async function getAvailableChannels(token, guildId) {
+    const client = new Client({ intents: botIntents });
+    await client.login(token);
+
+    // 2. Esperar a que esté listo
+    await new Promise(resolve => {
+        client.once(Events.ClientReady, () => {
+            console.log("Bot conectado para listar canales como:", client.user.tag);
+            resolve();
+        });
+    });
+
+    // 3. Obtener el servidor
+    const guild = await client.guilds.fetch(guildId);
+
+    // 4. Traer todos los canales
+    const channels = await guild.channels.fetch();
+
+    // 5. Filtrar solo canales de texto (tipo 0 = GuildText)
+    const textChannels = channels
+        .filter(ch => ch.type === 0)
+        .map(ch => ({
+            id: ch.id,
+            name: ch.name,
+            category: ch.parent?.name || "Sin categoría"
+        }));
+
+    client.destroy();
+
+    return textChannels;
+}
+
+// Exportar las funciones para usarlas desde index.js o desde donde armes la API
+module.exports = { collectMessages, getAvailableChannels };
