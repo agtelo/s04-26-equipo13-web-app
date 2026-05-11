@@ -35,7 +35,10 @@ async function collectMessages(token, channelId) {
         Creamos la variable "sevenDays" y la igualamos a Date.now() y le restamos el 7 (dias de la semana) 
         a esto le multiplicamos el valor de un dia en segundos y lo pasamos a milisegundos a todo
     */
-    const sevenDays = Date.now() - (7 * 86400 * 1000);
+    const segDay = 86400;
+    const mili = 1000;    
+
+    const sevenDays = Date.now() - (7 * segDay * mili);
 
     // 6. Convertimos a un array simple los datos y filtramos por fecha
     const result = messages.map(msg => ({

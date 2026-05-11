@@ -2,12 +2,21 @@ require("dotenv").config();
 
 const { collectMessages, getAvailableChannels } = require("./collector/discord-collector");
 const { generateContent } = require("./processor/content-generator");
-const cron = require("node-cron");
+
 
 const TOKEN = process.env.DISCORD_TOKEN; //el bot
 const CHANNEL_ID = "1498678945812447389";
 const GUILD_ID = process.env.DISCORD_GUILD_ID; //id del server
 const GEMINI_KEY = process.env.GEMINI_API;
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+const userRoutes = require("./routes/userRoutes");
+
+app.use("/user", userRoutes);
 
 async function main() {
 
@@ -42,11 +51,33 @@ async function main() {
     console.log("\n=== TWITTER ===");
     console.log(drafts.twitter);
 }
+
+async function startServer() {
+
+    try{
+        await sequelize.authenticate();
+        console.log("Conexion a la bd exitosa");
+
+        await sequelize.sync();
+        console.log("Tablas sincronizadas");
+
+        const PORT = process.env.PORT;
+        app.listen(PORT, () => {
+            console.log(`Servidor corriendo en el ${PORT}`);
+        });
+        
+    }catch(error){
+        console.log("Error al conectar a la base de datos: ", error);
+    };
+}
+
+startServer();
+
 // Paso 4: utilizamos cron para contar los dias de la semana y verificamos q sea correcto, para enviar el informe semanal
 cron.schedule("0 18 * * 5", async () => {
     // 0-> minutos, 18-> hora, *-> valores nulos, 5-> dia de la semana en este caso viernes (0 = domingo, ..., 5 = viernes)
 
-    try {
+    try{
 
         await main();
 
