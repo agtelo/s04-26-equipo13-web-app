@@ -17,16 +17,14 @@ async function generateContent(messages, apiKey) {
 
     ${messagesText}
 
-    Generá 3 borradores de contenido basados en esta actividad:
+    Generá 2 borradores de contenido basados en esta actividad:
 
     1. **NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)
-    2. **LINKEDIN** (formato medio, 1 párrafo, tono profesional con emojis)
-    3. **TWITTER** (máximo 280 caracteres, directo y con hashtags)
+    2. **TWITTER** (máximo 280 caracteres, directo y con hashtags)
 
     Respondé en formato JSON con esta estructura:
     {
         "newsletter": "...",
-        "linkedin": "...",
         "twitter": "..."
     }
     Solo respondé con el JSON, sin texto adicional.
@@ -53,7 +51,6 @@ async function generateContent(messages, apiKey) {
 
         drafts = {
             newsletter: "Error al generar el newsletter",
-            linkedin: "Error al generar el linkedin",
             twitter: "Error al generar el tweet"
         };
     }
@@ -61,4 +58,42 @@ async function generateContent(messages, apiKey) {
     return drafts;
 }
 
-module.exports = { generateContent };
+const TYPE_PROMPTS = {
+    newsletter: "**NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)",
+    twitter: "**TWITTER** (máximo 280 caracteres, directo y con hashtags)",
+};
+
+async function regenerateContent(messages, apiKey, type) {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const messagesText = messages
+        .map(msg => `- ${msg.author} dijo: "${msg.content}" (${msg.reactions} reacciones)`)
+        .join("\n");
+
+    const prompt = `
+    Sos un editor de contenido de una comunidad tech llamada TalentCircle.
+    Estas son las contribuciones más relevantes de la semana en Discord:
+
+    ${messagesText}
+
+    Generá un nuevo borrador diferente al anterior para el siguiente formato:
+    ${TYPE_PROMPTS[type]}
+
+    Respondé en formato JSON con esta estructura:
+    { "${type}": "..." }
+    Solo respondé con el JSON, sin texto adicional.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = result.response.text();
+    const clean = response.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+    try {
+        return JSON.parse(clean);
+    } catch (error) {
+        return { [type]: "Error al regenerar el contenido" };
+    }
+}
+
+module.exports = { generateContent, regenerateContent };
