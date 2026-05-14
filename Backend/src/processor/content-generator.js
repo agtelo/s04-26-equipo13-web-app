@@ -17,15 +17,17 @@ async function generateContent(messages, apiKey) {
 
     ${messagesText}
 
-    Generá 2 borradores de contenido basados en esta actividad:
+    Generá 3 borradores de contenido basados en esta actividad:
 
     1. **NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)
     2. **TWITTER** (máximo 280 caracteres, directo y con hashtags)
+    3. **REDDIT** (formato medio, 1-2 parrafos, tono conversacional)
 
     Respondé en formato JSON con esta estructura:
     {
         "newsletter": "...",
-        "twitter": "..."
+        "twitter": "...",
+        "reddit": "..."
     }
     Solo respondé con el JSON, sin texto adicional.
     `;
@@ -51,7 +53,8 @@ async function generateContent(messages, apiKey) {
 
         drafts = {
             newsletter: "Error al generar el newsletter",
-            twitter: "Error al generar el tweet"
+            twitter: "Error al generar el tweet",
+            reddit: "Error al generar el reddit"
         };
     }
 
@@ -61,6 +64,7 @@ async function generateContent(messages, apiKey) {
 const TYPE_PROMPTS = {
     newsletter: "**NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)",
     twitter: "**TWITTER** (máximo 280 caracteres, directo y con hashtags)",
+    reddit: "**REDDIT** (formato medio, 1-2 parrafos, tono conversacional)"
 };
 
 async function regenerateContent(messages, apiKey, type) {
@@ -90,9 +94,12 @@ async function regenerateContent(messages, apiKey, type) {
     const clean = response.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
 
     try {
+
         return JSON.parse(clean);
+
     } catch (error) {
-        return { [type]: "Error al regenerar el contenido" };
+
+        return { message: "Error al regenerar el contenido", error: error };
     }
 }
 

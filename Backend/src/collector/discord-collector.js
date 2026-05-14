@@ -88,5 +88,55 @@ async function getAvailableChannels(token, guildId) {
     return textChannels;
 }
 
+//Función para recolectar mensajes de todos los canales de texto (opcional, no se usa en el cron pero puede ser útil para pruebas o futuras funcionalidades)
+async function collectMessagesFromAllChannels(token, guildId) {
+    // 1. Obtener todos los canales
+    const channels = await getAvailableChannels(token, guildId);
+    
+    // 2. Crear cliente y conectar
+    const client = new Client({ intents: botIntents });
+    await client.login(token);
+    
+    await new Promise(resolve => {
+        client.once(Events.ClientReady, () => resolve());
+    });
+    
+    const sevenDays = Date.now() - (7 * 86400 * 1000);
+    let allMessages = [];
+    
+    // 3. Iterar sobre cada canal y recolectar mensajes
+    for (const channelInfo of channels) {
+
+        try {
+
+            const channel = await client.channels.fetch(channelInfo.id);
+
+            if (!channel) continue;
+            
+            const messages = await channel.messages.fetch({ limit: 100 });
+            
+            const filtered = messages.map(msg => ({
+
+                author: msg.author.username,
+                content: msg.content,
+                date: msg.createdAt,
+                reactions: msg.reactions.cache.size,
+                channel: channelInfo.name
+
+            })).filter(msg => msg.date.getTime() > sevenDays);
+            
+            allMessages = [...allMessages, ...filtered];
+
+        } catch (error) {
+
+            console.log(`Error en canal ${channelInfo.name}:`, error.message);
+        }
+    }
+    
+    client.destroy();
+
+    return allMessages;
+}
+
 // Exportar las funciones para usarlas desde index.js o desde donde armes la API
-module.exports = { collectMessages, getAvailableChannels };
+module.exports = { collectMessages, getAvailableChannels, collectMessagesFromAllChannels };
