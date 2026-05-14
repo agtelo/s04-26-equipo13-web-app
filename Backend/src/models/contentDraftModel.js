@@ -8,7 +8,7 @@ const contentDraftSchema = sequelize.define('Content', {
         autoIncrement: true
     },
     typeContent: {
-        type: DataTypes.ENUM
+        type: DataTypes.ENUM('newsletter', 'twitter', 'reddit')
     },
     content: {
         type: DataTypes.TEXT
@@ -16,6 +16,10 @@ const contentDraftSchema = sequelize.define('Content', {
     is_published: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    message_count: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 },{
     timestamps: true
