@@ -1,10 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/Logo';
-import FormRegister from './components/register-form';
-import Link from 'next/link';
 import React from 'react'
+import ForgotPasswordForm from './components/forgot-password-form';
+import Link from 'next/link';
 
-export default function RegisterPage() {
+
+export default function ForgotPasswordPage() {
   return (
     <Card className="border-none shadow-2xl rounded-[32px] overflow-hidden w-full max-w-md">
       <CardHeader className="text-center pt-16 pb-10">
@@ -16,7 +17,7 @@ export default function RegisterPage() {
         </CardDescription>
       </CardHeader>
       <CardContent className="px-10 pb-16 sm:px-14">
-        <FormRegister />
+        <ForgotPasswordForm />
 
         <div className="text-center space-y-4 flex flex-col">
           <Link
