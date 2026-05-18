@@ -12,12 +12,20 @@ import {
 import { ForgotPasswordFormSchema, ForgotPasswordFormType } from "./forgot-password.form.type";
 
 export default function ForgotPasswordForm() {
-  const { control } = useForm<ForgotPasswordFormType>({
+  const { control, handleSubmit, formState: { isSubmitting } } = useForm<ForgotPasswordFormType>({
     resolver: zodResolver(ForgotPasswordFormSchema),
+    defaultValues: {
+      email: '',
+    },
   })
   
+  const onSubmit = (data: ForgotPasswordFormType) => {
+    console.log('Enviando:', data)
+    // Aquí va la lógica de llamar a API
+  }
+
   return (
-    <form  className="space-y-6 mb-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mb-8">
       <FieldGroup>
         <Controller
           control={control}
@@ -33,15 +41,20 @@ export default function ForgotPasswordForm() {
                 className="rounded-full px-8 bg-secondary/50 border-none h-14"
                 placeholder="name@company.com"
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.error && (
+                <FieldError className="text-destructive text-xs mt-1">
+                  {fieldState.error.message}
+                </FieldError>
+              )}
             </Field>
           )}
         />
         <Button
           type="submit"
+          disabled={isSubmitting}
           className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all"
         >
-          Reset Password
+          {isSubmitting ? 'Sending...' : 'Reset Password'}
         </Button>
       </FieldGroup>
     </form>
