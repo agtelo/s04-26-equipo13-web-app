@@ -1,31 +1,30 @@
-import { fontSecondary } from "@/utils/font";
-import Image from "next/image";
+import { Logo } from "@/components/Logo";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import FormRegister from "../register/components/register-form";
 import { LoginForm } from "./components";
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center  rounded-md mx-auto w-md  h-fit px-7 py-10  bg-white my-16 ">
-      <div className="flex flex-col justify-center items-center gap-3 w-full">
-        <div className="relative w-14 h-14 mt-5">
-          <Image
-            src="/logo.svg"
-            alt="Logo Corporativo"
-            fill
-            className="absolute"
-          />
-        </div>
-        <h2
-          className={`${fontSecondary.className} antialiased text-4xl font-medium italic`}
-        >
+    <Card className="border-none shadow-2xl rounded-[32px] overflow-hidden w-full max-w-md">
+      <CardHeader className="text-center pt-16 pb-10">
+        <Logo className="text-primary w-14 h-14 mx-auto mb-6" />
+        <CardTitle className="text-4xl font-serif italic mb-2">
           Distiller
-        </h2>
-        <p className="uppercase text-xs tracking-wide text-[#8A8A8A] text-center ">
-          Ai content pipeline
-          <span className="block pt-1">by talentcircle</span>
-        </p>
-
+        </CardTitle>
+        <CardDescription className="uppercase text-[10px] font-bold tracking-[0.2em] text-muted-foreground/60 flex flex-col gap-1 items-center">
+          <span>AI Content Pipeline</span>
+          <span className="opacity-75">by TalentCircle</span>
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="px-10 pb-16 sm:px-14">
         <LoginForm />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
