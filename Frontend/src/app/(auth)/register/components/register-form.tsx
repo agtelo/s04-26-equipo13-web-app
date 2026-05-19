@@ -1,28 +1,28 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Eye, EyeOff } from 'lucide-react'
-import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form' 
-import { zodResolver } from '@hookform/resolvers/zod'
+"use client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FieldGroup,
   Field,
   FieldLabel,
   FieldError,
-} from '@/components/ui/field'
-import { RegisterFormSchema, RegisterFormType } from "./register-form.type";
-
+} from "@/components/ui/field";
+import { RegisterFormType } from "@/interfaces";
+import { RegisterFormSchema } from "@/schema";
 
 export default function FormRegister() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const { control } = useForm<RegisterFormType>({
     resolver: zodResolver(RegisterFormSchema),
-    mode: 'onChange'
-  })
-  
+    mode: "onChange",
+  });
+
   return (
-    <form  className="space-y-6 mb-8">
+    <form className="space-y-6 mb-8">
       <FieldGroup>
         <Controller
           control={control}
@@ -71,7 +71,7 @@ export default function FormRegister() {
               <div className="relative">
                 <Input
                   {...field}
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   className="rounded-full px-8 bg-secondary/50 border-none h-14 pr-14"
                   placeholder="••••••••"
                 />
@@ -99,5 +99,6 @@ export default function FormRegister() {
         </Button>
       </FieldGroup>
     </form>
-  )
+  );
 }
+

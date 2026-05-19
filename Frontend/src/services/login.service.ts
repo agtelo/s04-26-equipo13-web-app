@@ -1,9 +1,19 @@
 "use server";
-import { LoginFormType } from "@/app/(auth)/login/components/login-form.type";
+import { LoginFormType } from "@/interfaces";
 import axios from "axios";
 
 export const LoginService = async (values: LoginFormType) => {
-  const resp = await axios.post(`${process.env.API_URL}/user/login`, values);
-  console.log({ resp: resp.data });
-  return resp.data;
+  try {
+    const { data } = await axios.post<{
+      message: string;
+      user: { id: number; full_name: string };
+      token: string;
+    }>(`${process.env.API_URL}/user/login`, values);
+    console.log(data);
+    return data;
+  } catch (error) {
+    return {
+      message: error.message,
+    };
+  }
 };
