@@ -12,6 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import { LoginFormSchema, LoginFormType } from "./login-form.type";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
 import { LoginService } from "@/services/login.service";
 
 export const LoginForm = () => {
@@ -21,15 +22,20 @@ export const LoginForm = () => {
 
   const { mutate } = useMutation({
     mutationFn: LoginService,
+    onError: (error) => {
+      console.log(error);
+    },
     onSuccess: (data) => {
       console.log(data);
     },
   });
 
-  const onSubmit = (values: LoginFormType) => mutate(values);
+  const onSubmit = handleSubmit((data) => {
+    mutate(data);
+  });
 
   return (
-    <form className="w-full mt-7" onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-full mt-7" onSubmit={onSubmit}>
       <FieldGroup>
         <Controller
           control={control}

@@ -1,4 +1,4 @@
-import { Logo } from "@/components/Logo";
+import { Logo } from "@/components/shared/Logo";
 import {
   Card,
   CardHeader,
@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import FormRegister from "../register/components/register-form";
 import { LoginForm } from "./components";
 
 export default function LoginPage() {
