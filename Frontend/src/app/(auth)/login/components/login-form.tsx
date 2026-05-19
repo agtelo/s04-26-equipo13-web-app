@@ -28,8 +28,8 @@ export const LoginForm = () => {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: (data) => {
-      toast(data.message);
+    onSuccess: (values) => {
+      toast.success(values);
       router.push("/");
     },
   });
@@ -74,7 +74,7 @@ export const LoginForm = () => {
             Sign In
           </Button>
           <Button className="" type="submit" variant="link" asChild>
-            <Link href="/auth/sign-in">Back to Sign In</Link>
+            <Link href="/login">Back to Sign In</Link>
           </Button>
         </Field>
 

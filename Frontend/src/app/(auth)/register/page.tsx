@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { Logo } from "@/components/shared/Logo";
 import FormRegister from "./components/register-form";
-import React from "react";
 import Link from "next/link";
 
 export default function RegisterPage() {

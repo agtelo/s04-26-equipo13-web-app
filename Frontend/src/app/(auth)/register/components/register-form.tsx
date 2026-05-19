@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FieldGroup,
@@ -13,17 +13,39 @@ import {
 } from "@/components/ui/field";
 import { RegisterFormType } from "@/interfaces";
 import { RegisterFormSchema } from "@/schema";
+import { useMutation } from "@tanstack/react-query";
+import { RegisterService } from "@/services";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function FormRegister() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { control , formState: { isSubmitting } } = useForm<RegisterFormType>({
+  const router = useRouter();
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<RegisterFormType>({
     resolver: zodResolver(RegisterFormSchema),
-    mode: "onChange",
   });
 
+  const { mutate } = useMutation({
+    mutationFn: RegisterService,
+    onError: (error) => {
+      toast.error(error.message);
+      return;
+    },
+    onSuccess: (values) => {
+      toast.success(values);
+      router.push("/login");
+    },
+  });
+
+  const onSubmit: SubmitHandler<RegisterFormType> = (values) => mutate(values);
+
   return (
-    <form className="space-y-6 mb-8">
+    <form className="space-y-6 mb-8" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
         <Controller
           control={control}
@@ -109,10 +131,9 @@ export default function FormRegister() {
           disabled={isSubmitting}
           className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all"
         >
-          {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          {isSubmitting ? "Creating Account..." : "Create Account"}
         </Button>
       </FieldGroup>
     </form>
   );
 }
-
