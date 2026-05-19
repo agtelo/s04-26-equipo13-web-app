@@ -60,9 +60,14 @@ export const LoginForm = () => {
           name="password"
           render={({ field, fieldState }) => (
             <Field>
-              <FieldLabel className="uppercase text-[#8A8A8A] font-bold tracking-wide text-xs ">
-                Password
-              </FieldLabel>
+              <div className="flex justify-between">
+                <FieldLabel className="uppercase text-[#8A8A8A] font-bold tracking-wide text-xs ">
+                  Password
+                </FieldLabel>
+                <FieldLabel className="uppercase text-[#8A8A8A] font-bold tracking-wide text-xs ">
+                  <Link href="/forgot-password">Forgot?</Link>
+                </FieldLabel>
+              </div>
               <Input {...field} type="password" placeholder="*******" />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -72,9 +77,6 @@ export const LoginForm = () => {
         <Field orientation="responsive">
           <Button type="submit" className="mt-7 py-7 uppercase rounded-full">
             Sign In
-          </Button>
-          <Button className="" type="submit" variant="link" asChild>
-            <Link href="/login">Back to Sign In</Link>
           </Button>
         </Field>
 
