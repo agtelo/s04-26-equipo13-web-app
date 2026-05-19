@@ -16,7 +16,8 @@ import { RegisterFormSchema } from "@/schema";
 
 export default function FormRegister() {
   const [showPassword, setShowPassword] = useState(false);
-  const { control } = useForm<RegisterFormType>({
+
+  const { control , formState: { isSubmitting } } = useForm<RegisterFormType>({
     resolver: zodResolver(RegisterFormSchema),
     mode: "onChange",
   });
@@ -38,7 +39,11 @@ export default function FormRegister() {
                 className="rounded-full px-8 bg-secondary/50 border-none h-14"
                 placeholder="John Doe"
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.error && (
+                <FieldError className="text-destructive text-xs mt-1">
+                  {fieldState.error.message}
+                </FieldError>
+              )}
             </Field>
           )}
         />
@@ -56,7 +61,11 @@ export default function FormRegister() {
                 className="rounded-full px-8 bg-secondary/50 border-none h-14"
                 placeholder="name@company.com"
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.error && (
+                <FieldError className="text-destructive text-xs mt-1">
+                  {fieldState.error.message}
+                </FieldError>
+              )}
             </Field>
           )}
         />
@@ -87,15 +96,20 @@ export default function FormRegister() {
                   )}
                 </button>
               </div>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.error && (
+                <FieldError className="text-destructive text-xs mt-1">
+                  {fieldState.error.message}
+                </FieldError>
+              )}
             </Field>
           )}
         />
         <Button
           type="submit"
+          disabled={isSubmitting}
           className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all"
         >
-          Create Account
+          {isSubmitting ? 'Creating Account...' : 'Create Account'}
         </Button>
       </FieldGroup>
     </form>
