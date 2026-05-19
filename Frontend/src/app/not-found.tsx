@@ -4,12 +4,8 @@ import { fontSecondary } from "@/utils/font";
 import { ArrowLeft, HouseIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 
 export default function NotFound() {
-  const pathname = usePathname();
-  const router = useRouter();
-
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div>
