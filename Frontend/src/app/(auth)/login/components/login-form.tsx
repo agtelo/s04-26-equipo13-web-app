@@ -7,17 +7,39 @@ import {
 } from "@/components/ui/field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { Controller, useForm } from "react-hook-form";
-import { LoginFormSchema, LoginFormType } from "./login-form.type";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { LoginService } from "@/services/login.service";
+import { toast } from "sonner";
+import { LoginFormSchema } from "@/schema";
+import { LoginFormType } from "@/interfaces";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
-  const { control } = useForm<LoginFormType>({
+  const router = useRouter();
+  const { control, handleSubmit } = useForm<LoginFormType>({
     resolver: zodResolver(LoginFormSchema),
   });
+
+  const { mutate } = useMutation({
+    mutationFn: LoginService,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      toast(data.message);
+      router.push("/");
+    },
+  });
+
+  const onSubmit: SubmitHandler<LoginFormType> = (data) => {
+    mutate(data);
+  };
+
   return (
-    <form className="w-full mt-7">
+    <form className="w-full mt-7" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
         <Controller
           control={control}
