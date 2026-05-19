@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Logo } from '@/components/Logo';
+import { Logo } from '@/components/shared/Logo';
 import React from 'react'
 import ForgotPasswordForm from './components/forgot-password-form';
 import Link from 'next/link';
