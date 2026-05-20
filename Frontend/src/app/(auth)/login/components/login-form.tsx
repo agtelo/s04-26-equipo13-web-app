@@ -30,7 +30,7 @@ export const LoginForm = () => {
     },
     onSuccess: (values) => {
       toast.success(values);
-      router.push("/");
+      router.push("/dashboard");
     },
   });
 
