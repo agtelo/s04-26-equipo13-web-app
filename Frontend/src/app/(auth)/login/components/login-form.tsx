@@ -16,9 +16,13 @@ import { toast } from "sonner";
 import { LoginFormSchema } from "@/schema";
 import { LoginFormType } from "@/interfaces";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
   const { control, handleSubmit } = useForm<LoginFormType>({
     resolver: zodResolver(LoginFormSchema),
   });
@@ -60,15 +64,25 @@ export const LoginForm = () => {
           name="password"
           render={({ field, fieldState }) => (
             <Field>
-              <div className="flex justify-between">
-                <FieldLabel className="uppercase text-[#8A8A8A] font-bold tracking-wide text-xs ">
-                  Password
-                </FieldLabel>
-                <FieldLabel className="uppercase text-[#8A8A8A] font-bold tracking-wide text-xs ">
-                  <Link href="/forgot-password">Forgot?</Link>
-                </FieldLabel>
+              <div className="relative">
+                <Input
+                  {...field}
+                  type={showPassword ? "text" : "password"}
+                  className="rounded-full px-8 bg-secondary/50 border-none h-14 pr-14"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors h-10 w-10 flex items-center justify-center rounded-full hover:bg-white/10"
+                >
+                  {showPassword ? (
+                    <Eye className="w-5 h-5" />
+                  ) : (
+                    <EyeOff className="w-5 h-5" />
+                  )}
+                </button>
               </div>
-              <Input {...field} type="password" placeholder="*******" />
 
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
