@@ -1,6 +1,6 @@
 import { Logo } from "./Logo";
 import { buttonVariants } from "../ui/button";
-import { LogOut } from "lucide-react";
+
 import { ModeToggle } from "./ModeToggle";
 import { cn } from "@/lib/utils";
 import { ProfileService, LogoutService } from "@/services";
@@ -8,21 +8,15 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "../ui/separator";
 import { redirect } from "next/navigation";
+import { LogoutButton } from "./LogoutButton";
 
 export default async function Header() {
    const { user } = await ProfileService();
 
   if (!user) redirect("/login");
-
-  const handleLogout = async () => {
-    "use server";
-    await LogoutService();
-    redirect("/login");
-  };
 
   return (
     <header className="border-b bg-card px-6 md:px-12 py-5 md:py-8 flex flex-col md:flex-row items-center justify-between sticky top-0 z-30 gap-6">
@@ -86,13 +80,8 @@ export default async function Header() {
               <Separator className="bg-border/50 my-1 mx-2" />
 
               <div className="p-1">
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="rounded-2xl p-3 flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer transition-all"
-                >
-                  <LogOut className="w-4 h-4" />
-                  sign out of distiller
-                </DropdownMenuItem>
+             
+                <LogoutButton className="rounded-2xl p-3 flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer transition-all" />
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
