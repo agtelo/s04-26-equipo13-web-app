@@ -28,6 +28,11 @@ export default function FormRegister() {
     formState: { isSubmitting },
   } = useForm<RegisterFormType>({
     resolver: zodResolver(RegisterFormSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
   });
 
   const { mutate } = useMutation({

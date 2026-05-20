@@ -25,6 +25,10 @@ export const LoginForm = () => {
 
   const { control, handleSubmit } = useForm<LoginFormType>({
     resolver: zodResolver(LoginFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const { mutate } = useMutation({
