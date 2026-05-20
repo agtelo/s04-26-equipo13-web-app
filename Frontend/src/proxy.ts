@@ -1,17 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export default function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get("token");
   const { pathname } = request.nextUrl;
 
-  // Si intenta acceder a rutas protegidas sin token
+  // Redirige la raíz según si tiene token o no
+  if (pathname === "/") {
+    if (token) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } else {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
   if (pathname.startsWith("/dashboard") || pathname.startsWith("/editor")) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
 
-  // Si intenta acceder a login/register CON token, redirige a dashboard
   if ((pathname === "/login" || pathname === "/register") && token) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
@@ -21,10 +28,9 @@ export default function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Protege estas rutas
+    "/",                 
     "/dashboard/:path*",
     "/editor/:path*",
-    // Pero permite acceso público a login/register
     "/login",
     "/register",
   ],

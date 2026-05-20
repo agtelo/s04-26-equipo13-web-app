@@ -14,9 +14,9 @@ import { Separator } from "../ui/separator";
 import { redirect } from "next/navigation";
 
 export default async function Header() {
-  const data = await ProfileService();
+   const { user } = await ProfileService();
 
-  if (!data) redirect("/login");
+  if (!user) redirect("/login");
 
   const handleLogout = async () => {
     "use server";
@@ -40,7 +40,7 @@ export default async function Header() {
 
       <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
         <ModeToggle />
-        {data.user && (
+        { user && (
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
