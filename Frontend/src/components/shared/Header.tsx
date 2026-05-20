@@ -3,6 +3,7 @@ import { buttonVariants } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 import { cn } from "@/lib/utils";
+import { ProfileService, LogoutService } from "@/services";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,10 +11,17 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "../ui/separator";
-import { ProfileService } from "@/services";
+import { redirect } from "next/navigation";
 
 export default async function Header() {
   const { user } = await ProfileService();
+
+  const handleLogout = async () => {
+    "use server";
+    await LogoutService();
+    redirect("/login");
+  };
+
   return (
     <header className="border-b bg-card px-6 md:px-12 py-5 md:py-8 flex flex-col md:flex-row items-center justify-between sticky top-0 z-30 gap-6">
       <div className="flex items-center gap-4 self-start md:self-auto">
@@ -30,64 +38,63 @@ export default async function Header() {
 
       <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
         <ModeToggle />
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              "flex items-center gap-3 px-1.5 pr-4 py-1.5 h-12 rounded-full bg-secondary/30 hover:bg-secondary/50 transition-all border border-border/50 group",
-            )}
-          >
-            <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-black text-xs shadow-inner">
-              {user
-                ? user.full_name
+        {user && (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                "flex items-center gap-3 px-1.5 pr-4 py-1.5 h-12 rounded-full bg-secondary/30 hover:bg-secondary/50 transition-all border border-border/50 group",
+              )}
+            >
+              <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-black text-xs shadow-inner">
+                {user.full_name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </div>
+              <div className="flex flex-col items-start text-left">
+                <span className="text-xs font-black uppercase tracking-widest leading-none">
+                  {user.full_name.split(" ")[0]}
+                </span>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-64 rounded-[28px] border-none shadow-2xl p-2 mt-2 bg-card/95 backdrop-blur-xl ring-1 ring-border/50"
+            >
+              <div className="px-4 pt-5 pb-3 flex flex-col items-center text-center gap-2">
+                <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center text-primary-foreground font-black text-2xl shadow-xl rotate-3">
+                  {user.full_name
                     .split(" ")
                     .map((n) => n[0])
-                    .join("")
-                : user?.email}
-            </div>
-            <div className="flex flex-col items-start text-left">
-              <span className="text-xs font-black uppercase tracking-widest leading-none">
-                {user?.full_name
-                  ? user.full_name.split(" ")[0]
-                  : user?.email?.split("@")[0]}
-              </span>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-64 rounded-[28px] border-none shadow-2xl p-2 mt-2 bg-card/95 backdrop-blur-xl ring-1 ring-border/50"
-          >
-            <div className="px-4 pt-5 pb-3 flex flex-col items-center text-center gap-2">
-              <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center text-primary-foreground font-black text-2xl shadow-xl rotate-3">
-                {user?.full_name
-                  ? user.full_name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                  : user?.email?.[0]}
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center justify-center gap-2">
-                  <h3 className="text-sm font-black uppercase tracking-widest">
-                    {user?.full_name || user?.email?.split("@")[0]}
-                  </h3>
+                    .join("")}
                 </div>
-                <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest">
-                  {user?.email}
-                </p>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-center gap-2">
+                    <h3 className="text-sm font-black uppercase tracking-widest">
+                      {user.full_name}
+                    </h3>
+                  </div>
+                  <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest">
+                    {user.email}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <Separator className="bg-border/50 my-1 mx-2" />
+              <Separator className="bg-border/50 my-1 mx-2" />
 
-            <div className="p-1">
-              <DropdownMenuItem className="rounded-2xl p-3 flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer transition-all">
-                <LogOut className="w-4 h-4" />
-                sign out of distiller
-              </DropdownMenuItem>
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <div className="p-1">
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="rounded-2xl p-3 flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer transition-all"
+                >
+                  <LogOut className="w-4 h-4" />
+                  sign out of distiller
+                </DropdownMenuItem>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </header>
   );
