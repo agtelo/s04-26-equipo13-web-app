@@ -33,8 +33,8 @@ const communityFeedSchema = sequelize.define('CommunityFeed', {
         }
     }
 },
-    {
-        timestamps: true
-    });
+{
+    timestamps: true
+});
 
 module.exports = communityFeedSchema;
