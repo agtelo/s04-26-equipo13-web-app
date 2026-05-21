@@ -10,12 +10,12 @@ const regenerate = async (req, res) => {
     
     if (!messages || !type) {
 
-        return res.status(400).json({ message: "Se requieren 'messages' y 'type'" });
+        return res.status(400).json({ message: "The 'messages' and 'type' are required" });
     }
     
     if (!VALID_TYPES.includes(type)) {
 
-        return res.status(400).json({ message: `'type' debe ser uno de: ${VALID_TYPES.join(", ")}` });
+        return res.status(400).json({ message: `'type' must be one of: ${VALID_TYPES.join(", ")}` });
     }
     
     try {

@@ -14,6 +14,7 @@ const regenerateRoutes = require("./routes/regenerateRoutes");
 const publishRoutes = require("./routes/publishRoutes");
 const draftRoutes = require("./routes/draftRoutes");
 const generationRoutes = require("./routes/generationRoutes");
+const communityFeedRoutes = require("./routes/communityFeedRoutes");
 const sequelize = require("./config/database");
 
 //Variables de entorno
@@ -35,6 +36,7 @@ app.use("/api",publishRoutes);
 app.use("/generation", generationRoutes);
 app.use("/drafts", draftRoutes);
 app.use("/api", regenerateRoutes);
+app.use("/community-feed", communityFeedRoutes);
 
 //Función principal que se ejecutará en el cron para realizar la generación semanal
 async function main() {
