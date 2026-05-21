@@ -3,6 +3,8 @@ const { collectMessagesFromAllChannels } = require('../collector/discord-collect
 const { generateContent } = require('../processor/content-generator');
 const contentDraftSchema = require('../models/contentDraftModel');
 const generationLogSchema = require('../models/generationLogModel');
+const communityFeedSchema = require('../models/communityFeedmodel');
+const { use } = require('react');
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 //const CHANNEL_ID = process.env.DISCORD_GUILD_ID;
@@ -26,6 +28,27 @@ const triggerGeneration = async (req, res) => {
         //Paso 2: Recolectar mensajes de Discord
         //const messages = await collectMessages(DISCORD_TOKEN, CHANNEL_ID);
         const messages = await collectMessagesFromAllChannels(DISCORD_TOKEN, GUILD_ID); //Si queremos recolectar de todos los canales en vez de uno específico
+
+        await communityFeedSchema.destroy({ truncate: true}); //Limpiamos la tabla de CommunityFeed antes de insertar los nuevos mensajes
+
+        const sortedMessages = messages
+            .filter(msg => msg.reactions > 0) //Filtramos solo los mensajes que tienen reacciones
+            .sort((a, b) => b.reactions - a.reactions) //Ordenamos los mensajes por número de reacciones de mayor a menor
+            .slice(0, 5); //Tomamos solo los 5 mensajes más populares
+        
+    
+        //Guardamos los mensajes más populares en la tabla CommunityFeed, asociándolos con el log de generación actual
+        for(const msg of sortedMessages){
+            
+            await communityFeedSchema.create({
+                user_name: msg.user_name,
+                content: msg.content,
+                channel_name: msg.channel_name || null,
+                original_date: msg.date,
+                reactions: msg.reactions,
+                generation_id: log.id
+            });
+        };
 
         //Paso 3: Generar contenido con Gemini
         const drafts = await generateContent(messages, GEMINI_KEY);
@@ -57,7 +80,7 @@ const triggerGeneration = async (req, res) => {
         //Devolvemos una respuesta exitosa con el conteo de mensajes procesados
         return res.status(200).json({ 
 
-            message: "Generación completada", 
+            message: "Generation completed", 
             logs: { message_count: messages.length } 
         });
 
@@ -71,7 +94,7 @@ const triggerGeneration = async (req, res) => {
             finished_at: new Date()
         });
 
-        return res.status(500).json({ message: "Error en la generación", error: error.message });
+        return res.status(500).json({ message: "Generation failed", error: error.message });
     }
 };
 
@@ -88,7 +111,7 @@ const getGenerationHistory = async (req, res) => {
 
     } catch (error) {
 
-        return res.status(500).json({ message: "Error al obtener el historial", error: error.message });
+        return res.status(500).json({ message: "Failed to load generation history", error: error.message });
     }
 };
 

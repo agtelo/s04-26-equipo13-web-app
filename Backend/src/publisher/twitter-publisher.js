@@ -31,3 +31,6 @@ async function publishTweet(content) {
 }
 
 module.exports = { publishTweet };
+
+//Se deja este metodo para futura implementacion, pero se comenta para evitar errores por falta de acceso a API de Twitter. 
+// Para usarlo, se deben configurar las variables de entorno con las credenciales de Twitter y descomentar el código.

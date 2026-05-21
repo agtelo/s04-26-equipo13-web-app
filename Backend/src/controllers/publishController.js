@@ -6,7 +6,7 @@ const publishTwitter = async (req, res) => {
     const { content } = req.body;
 
     if (!content) {
-        return res.status(400).json({ message: "Se requiere 'content'" });
+        return res.status(400).json({ message: "The content is required" });
     }
 
     try {
@@ -24,7 +24,7 @@ const publishReddit = async (req, res) => {
     const { subreddit, title, content } = req.body;
 
     if (!subreddit || !title || !content) {
-        return res.status(400).json({ message: "Se requieren 'subreddit', 'title' y 'content'" });
+        return res.status(400).json({ message: "The 'subreddit', 'title', and 'content' are required" });
     }
 
     try {

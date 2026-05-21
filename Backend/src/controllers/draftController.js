@@ -14,7 +14,7 @@ const getAllDrafts = async (req, res) => {
 
     }catch(error){
 
-        return res.status(500).json({message: "Error al obtener los borradores", error: error.message});
+        return res.status(500).json({message: "Failed to load drafts", error: error.message});
     }
 };
 
@@ -28,7 +28,7 @@ const getDraftById = async (req, res) => {
 
         if(!draft){
 
-            return res.status(404).json({message: "Borrador no encontrado"});
+            return res.status(404).json({message: "Draft not found"});
         }
 
         //Devolvemos el borrador encontrado
@@ -36,7 +36,7 @@ const getDraftById = async (req, res) => {
 
     }catch(error){
 
-        return res.status(500).json({message: "Error al obtener el borrador", error: error.message});
+        return res.status(500).json({message: "Failed to load draft", error: error.message});
     }
 };
 
@@ -47,7 +47,7 @@ const updateDraft = async (req, res) => {
 
     if(!content){
 
-        return res.status(400).json({message: "El contenido es requerido"});
+        return res.status(400).json({message: "The content is required"});
     }
 
     try{
@@ -55,17 +55,17 @@ const updateDraft = async (req, res) => {
         const draft = await contentDraftModel.findByPk(id);
 
         if(!draft){
-            return res.status(404).json({message: "Borrador no encontrado"});
+            return res.status(404).json({message: "Draft not found"});
         }
 
         //Actualizamos el contenido del borrador
         await draft.update({ content });
 
-        return res.status(200).json({message: "Borrador actualizado", draft});
+        return res.status(200).json({message: "Draft updated", draft});
 
     }catch(error){
 
-        return res.status(500).json({message: "Error al actualizar el borrador", error: error.message});
+        return res.status(500).json({message: "Failed to update draft", error: error.message});
     }
 };
 
@@ -80,17 +80,17 @@ const deleteDraft = async (req, res) => {
 
         if(!draft){
 
-            return res.status(404).json({message: "Borrador no encontrado"});
+            return res.status(404).json({message: "Draft not found"});
         }
 
         //Eliminamos el borrador
         await draft.destroy();
 
-        return res.status(200).json({message: "Borrador eliminado"});
+        return res.status(200).json({message: "Draft deleted"});
 
     }catch(error){
 
-        return res.status(500).json({message: "Error al eliminar el borrador", error: error.message});
+        return res.status(500).json({message: "Failed to delete draft", error: error.message});
     }
 };
 
