@@ -6,3 +6,4 @@ const { authMiddleware } = require("../middlewares/authMiddlewares");
 router.post("/regenerate", authMiddleware, regenerateController.regenerate);
 
 module.exports = router;
+
