@@ -4,7 +4,7 @@ const jwt = require("../helpers/jwt");
 
 const profile = (req, res) => {
     return res.status(200).json({
-        message: "Perfil del usuario",
+        message: "User profile",
         user: req.user
     });
 };
@@ -20,7 +20,7 @@ const register = async (req, res) => {
         if (!full_name || !email || !password) {
 
             return res.status(400).json({
-                message: "Error al validar los datos",
+                message: "Validation failed",
             });
         }
 
@@ -29,7 +29,7 @@ const register = async (req, res) => {
 
         if (userExisting) {
 
-            return res.status(400).json({ message: "Usuario ya existente" });
+            return res.status(400).json({ message: "User already exists" });
         }
 
         //Ciframos la contraseña
@@ -43,11 +43,11 @@ const register = async (req, res) => {
 
         if (!userSaved) {
 
-            return res.status(500).json({ message: "El usuario no se guardo correctamente" });
+            return res.status(500).json({ message: "Failed to save user" });
         }
 
         return res.status(201).json({ 
-            message: "Usuario registrado correctamente",
+            message: "User registered successfully",
             user: {
                 id: userSaved.id,
                 full_name: userSaved.full_name,
@@ -60,7 +60,7 @@ const register = async (req, res) => {
         console.log(error);
 
         return res.status(500).json({
-            message: "Error en el sistema",
+            message: "System error",
             error: error,
         });
     }
@@ -76,7 +76,7 @@ const login = async (req, res) => {
         if(!email || !password){
     
             return res.status(400).json({
-                message: "Error al validar los datos",
+                message: "Validation failed",
             });
         }
     
@@ -89,7 +89,7 @@ const login = async (req, res) => {
         if(!userExisting){
     
             return res.status(400).json({
-                message: "El usuario no existe"
+                message: "User not found"
             });
         }
 
@@ -99,14 +99,14 @@ const login = async (req, res) => {
         if(!pwd){
 
             return res.status(400).json({
-                message: "Usuario o contraseña incorrectos"
+                message: "Invalid username or password"
             });
         }
 
         let token = jwt.createToken(userExisting);
 
         return res.status(200).json({
-            message: "Inicio de sesion exitoso",
+            message: "Login successful",
             user: {
                 id: userExisting.id,
                 full_name: userExisting.full_name,
@@ -117,7 +117,7 @@ const login = async (req, res) => {
     }catch(error){
 
         return res.status(500).json({
-            message: "Error en el sistema",
+            message: "System error",
             error: error,
         });
     }
