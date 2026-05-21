@@ -25,7 +25,20 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
-        <Toaster />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            classNames: {
+              success:
+                "!bg-[#E8F5E9] !text-[#2E7D32] !border-[#C8E6C9] dark:!bg-[#102A16] dark:!text-[#A5D6A7] dark:!border-[#2E7D32]",
+              error:
+                "!bg-[#FDECEC] !text-[#C62828] !border-[#F5C2C2] dark:!bg-[#2A1010] dark:!text-[#EF9A9A] dark:!border-[#C62828]",
+
+              warning:
+                "!bg-[#FFF4E5] !text-[#EF6C00] !border-[#FFE0B2] dark:!bg-[#2A1A05] dark:!text-[#FFCC80] dark:!border-[#EF6C00]",
+            },
+          }}
+        />
       </body>
     </html>
   );

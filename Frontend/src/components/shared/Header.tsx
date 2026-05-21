@@ -14,9 +14,7 @@ import { redirect } from "next/navigation";
 import { LogoutButton } from "./LogoutButton";
 
 export default async function Header() {
-   const { user } = await ProfileService();
-
-  if (!user) redirect("/login");
+  const { user } = await ProfileService();
 
   return (
     <header className="border-b bg-card px-6 md:px-12 py-5 md:py-8 flex flex-col md:flex-row items-center justify-between sticky top-0 z-30 gap-6">
@@ -34,7 +32,7 @@ export default async function Header() {
 
       <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
         <ModeToggle />
-        { user && (
+        {user && (
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
@@ -90,4 +88,3 @@ export default async function Header() {
     </header>
   );
 }
-
