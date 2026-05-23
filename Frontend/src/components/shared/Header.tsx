@@ -3,14 +3,13 @@ import { buttonVariants } from "../ui/button";
 
 import { ModeToggle } from "./ModeToggle";
 import { cn } from "@/lib/utils";
-import { ProfileService, LogoutService } from "@/services";
+import { ProfileService } from "@/services";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "../ui/separator";
-import { redirect } from "next/navigation";
 import { LogoutButton } from "./LogoutButton";
 
 export default async function Header() {

@@ -8,10 +8,9 @@ export default function AuthLayout({
 }) {
 
   return (
-    <div className="min-h-screen  bg-background flex-col items-center justify-center relative">
+    <div className="min-h-screen bg-background flex-col items-center justify-center relative">
       <Header />
-
-      <div className="w-full max-w-2xl">
+      <div className="w-full">
         {children}
       </div>
     </div>

@@ -1,0 +1,80 @@
+import { Copy, CheckCircle2, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { Channel, Draft } from "@/interfaces";
+
+interface DraftEditorProps {
+  draft: Draft;
+  activeChannel: string;
+  channels: Channel[];
+  onChange: (value: string) => void;
+  onApprove: () => void;
+}
+
+export function DraftEditor({
+  draft,
+  activeChannel,
+  channels,
+  onChange,
+  onApprove,
+}: DraftEditorProps) {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(draft.content);
+    toast.success("Copied to clipboard");
+  };
+
+  return (
+    <div className="flex-1 flex flex-col">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h3 className="font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground mb-0.5">
+            {channels.find((c) => c.id === activeChannel)?.name}
+          </h3>
+          <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest">
+            Active Template
+          </p>
+        </div>
+        {draft.status === "approved" && (
+          <span className="bg-green-500/10 text-green-600 text-[10px] font-black uppercase tracking-widest rounded-full px-5 h-8 flex items-center gap-2">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Approved
+          </span>
+        )}
+      </div>
+      <Textarea
+        className="flex-1 w-full p-8 bg-secondary/10 rounded-[32px] border-none text-base leading-relaxed resize-none focus-visible:ring-primary/10 transition-all min-h-[300px] shadow-inner"
+        value={draft.content}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Start writing..."
+      />
+      <Separator className="my-8" />
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={handleCopy}
+            className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2"
+          >
+            <Copy className="w-4 h-4" /> Copy
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
+          >
+            <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+            AI Draft
+          </Button>
+        </div>
+        {draft.status !== "approved" && (
+          <Button
+            onClick={onApprove}
+            className="rounded-full text-[10px] font-black uppercase tracking-widest px-10 h-12 gap-2 shadow-xl"
+          >
+            <CheckCircle2 className="w-4 h-4" /> Approve Draft
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
