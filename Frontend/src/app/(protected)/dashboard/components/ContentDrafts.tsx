@@ -19,6 +19,7 @@ import {
   ContentDraftService,
   IsPublishedDraftService,
 } from "@/services/contentdraft.service";
+import { DraftEditorSkeleton } from "@/components/skeletons/DraftEditorSkeleton";
 
 const CHANNELS = [
   { id: "newsletter", name: "Newsletter", icon: Mail, color: "text-blue-500" },
@@ -29,7 +30,7 @@ const CHANNELS = [
 export function ContentDrafts() {
   const [activeChannel, setActiveChannel] = useState("newsletter");
   const [drafts, setDrafts] = useState<Array<DraftI>>();
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["contentdraft"],
     queryFn: ContentDraftService,
   });
@@ -91,18 +92,20 @@ export function ContentDrafts() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col pt-10 px-10 pb-10">
-        {!currentDraft ? (
-          <EmptyDraft />
-        ) : (
-          <DraftEditor
-            draft={currentDraft}
-            activeChannel={activeChannel}
-            channels={CHANNELS}
-            onChange={handleChange}
-            onApprove={handleApprove}
-          />
-        )}
-      </CardContent>
+  {isLoading ? (
+    <DraftEditorSkeleton />
+  ) : !currentDraft ? (
+    <EmptyDraft />
+  ) : (
+    <DraftEditor
+      draft={currentDraft}
+      activeChannel={activeChannel}
+      channels={CHANNELS}
+      onChange={handleChange}
+      onApprove={handleApprove}
+    />
+  )}
+</CardContent>
     </Card>
   );
 }

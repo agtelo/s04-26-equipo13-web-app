@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { CommunityFeedService } from "@/services/communityfeed.service";
 import { GenerationDraftNew } from "@/services/contentdraft.service";
 import { toast } from "sonner";
+import { ActivityCardSkeleton } from "@/components/skeletons/ActivityCardSkeleton";
 
 const mockActivities: Activity[] = [
   {
@@ -55,7 +56,7 @@ const mockActivities: Activity[] = [
 ];
 
 export function CommunityFeed() {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["communityfeed"],
     queryFn: CommunityFeedService,
   });
@@ -91,16 +92,22 @@ export function CommunityFeed() {
           <RefreshCw className="w-5 h-5" />
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8">
-        {mockActivities.length === 0 ? (
-          <ActivityCardEmpty />
-        ) : (
-          <div className="space-y-6">
-            {mockActivities.map((activity) => (
-              <ActivityCard key={activity.id} activity={activity} />
-            ))}
-          </div>
-        )}
+   <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8">
+  {isLoading ? (
+    <div className="space-y-6">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <ActivityCardSkeleton key={i} />
+      ))}
+    </div>
+  ) : mockActivities.length === 0 ? (
+    <ActivityCardEmpty />
+  ) : (
+    <div className="space-y-6">
+      {mockActivities.map((activity) => (
+        <ActivityCard key={activity.id} activity={activity} />
+      ))}
+    </div>
+  )}
         {mockActivities.length > 0 && (
           <Button
             onClick={handleAIGenerate}
