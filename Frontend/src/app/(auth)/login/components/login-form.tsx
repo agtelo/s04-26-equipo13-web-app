@@ -23,7 +23,7 @@ export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const { control, handleSubmit } = useForm<LoginFormType>({
+  const { control, handleSubmit , formState: { isSubmitting } } = useForm<LoginFormType>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       email: "",
@@ -49,25 +49,44 @@ export const LoginForm = () => {
   return (
     <form className="w-full mt-7" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
-        <Controller
+       <Controller
           control={control}
           name="email"
           render={({ field, fieldState }) => (
             <Field>
-              <FieldLabel className="uppercase text-[#8A8A8A] font-bold tracking-wide text-xs ">
+              <FieldLabel className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground ml-5">
                 Email Address
               </FieldLabel>
-              <Input {...field} placeholder="name@company.com" />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <Input
+                {...field}
+                type="email"
+                className="rounded-full px-8 bg-secondary/50 border-none h-14"
+                placeholder="name@company.com"
+              />
+              {fieldState.error && (
+                <FieldError className="text-destructive text-xs mt-1">
+                  {fieldState.error.message}
+                </FieldError>
+              )}
             </Field>
           )}
         />
 
-        <Controller
+ <Controller
           control={control}
           name="password"
           render={({ field, fieldState }) => (
             <Field>
+              <div className="flex items-center justify-between">
+              <FieldLabel className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground ml-5">
+                Password
+              </FieldLabel>
+              <Link href="/forgot-password">
+                <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground ml-5">
+                  FORGOT?
+                </p>
+              </Link>
+              </div>
               <div className="relative">
                 <Input
                   {...field}
@@ -87,25 +106,28 @@ export const LoginForm = () => {
                   )}
                 </button>
               </div>
-
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              {fieldState.error && (
+                <FieldError className="text-destructive text-xs mt-1">
+                  {fieldState.error.message}
+                </FieldError>
+              )}
             </Field>
           )}
         />
         <Field orientation="responsive">
-          <Button type="submit" className="mt-7 py-7 uppercase rounded-full">
-            Sign In
+          <Button type="submit" className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all">
+            {isSubmitting ? "Signing In..." : "Sign In"}
           </Button>
         </Field>
 
-        <p className="text-sm text-center my-5 text-[#48473E]">
+        <p className="text-sm text-center my-5 text-bg">
           Don't have an account?
-          <Link href="/register">
-            <span className="text-[#1C1C19] bold"> Register</span>
+          <Link href="/register" className="text-xs font-bold text-primary hover:underline transition-all ml-1" >
+            <span > Register</span>
           </Link>
         </p>
 
-        <p className="text-[#8A8A8A] text-[9px] text-center">
+        <p className="text-muted-foreground text-[9px] text-center">
           AUTHORIZED ACCESS ONLY. BY CONTINUING, YOU AGREE TO OUR TERMS OF
           PROCESSING.
         </p>
