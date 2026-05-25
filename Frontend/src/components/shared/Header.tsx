@@ -15,8 +15,6 @@ import { LogoutButton } from "./LogoutButton";
 export default async function Header() {
   const { user } = await ProfileService();
 
-  
-
   return (
     <header className="border-b bg-card px-6 md:px-12 py-5 md:py-8 flex flex-col md:flex-row items-center justify-between sticky top-0 z-30 gap-6">
       <div className="flex items-center gap-4 self-start md:self-auto">
@@ -44,7 +42,7 @@ export default async function Header() {
               <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-black text-xs shadow-inner">
                 {user.full_name
                   .split(" ")
-                  .map((n) => n[0])
+                  .map((n: string) => n[0])
                   .join("")}
               </div>
               <div className="flex flex-col items-start text-left">
@@ -61,7 +59,7 @@ export default async function Header() {
                 <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center text-primary-foreground font-black text-2xl shadow-xl rotate-3">
                   {user.full_name
                     .split(" ")
-                    .map((n) => n[0])
+                    .map((n: string) => n[0])
                     .join("")}
                 </div>
                 <div className="space-y-1">
@@ -79,7 +77,6 @@ export default async function Header() {
               <Separator className="bg-border/50 my-1 mx-2" />
 
               <div className="p-1">
-             
                 <LogoutButton className="rounded-2xl p-3 flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer transition-all" />
               </div>
             </DropdownMenuContent>

@@ -1,65 +1,79 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Mail, Users, Linkedin, Twitter} from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Mail, Linkedin, Twitter } from "lucide-react";
 import { toast } from "sonner";
 import { ChannelTabs } from "./ChannelTabs";
 import { DraftEditor } from "./DraftEditor";
 import { EmptyDraft } from "./DraftEmpty";
-import { Draft , Channel} from "@/interfaces";
-
-
+import { DraftI } from "@/interfaces";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  ContentDraftService,
+  IsPublishedDraftService,
+} from "@/services/contentdraft.service";
 
 const CHANNELS = [
-  { id: 'newsletter', name: 'Newsletter', icon: Mail, color: 'text-blue-500' },
-  { id: 'linkedin', name: 'LinkedIn', icon: Linkedin, color: 'text-blue-700' },
-  { id: 'twitter', name: 'Twitter (X)', icon: Twitter, color: 'text-sky-400' },
-  { id: 'internal', name: 'Internal Feed', icon: Users, color: 'text-purple-500' },
+  { id: "newsletter", name: "Newsletter", icon: Mail, color: "text-blue-500" },
+  { id: "twitter", name: "Twitter (X)", icon: Twitter, color: "text-sky-400" },
+  { id: "reddit", name: "reddit", icon: Linkedin, color: "text-blue-700" },
 ];
-
-const mockDrafts: Record<string, Draft> = {
-  newsletter: {
-    content: "This week in our community: We dove deep into React Server Components, explored 50 new LLM datasets, and had an incredible Cloud Infrastructure session. Here's your weekly digest...",
-    status: "draft",
-  },
-  linkedin: {
-    content: "Exciting week at TalentCircle! 🚀 Our community shared valuable insights on React Server Components and Cloud Infrastructure. Grateful for every member who contributes!",
-    status: "draft",
-  },
-  twitter: {
-    content: "This week's highlights from our community: ⚡ RSC best practices 📦 50 LLM datasets shared ☁️ Cloud Infra deep dive #TalentCircle #DevCommunity",
-    status: "approved",
-  },
-  internal: {
-    content: "",
-    status: "draft",
-  },
-};
 
 export function ContentDrafts() {
   const [activeChannel, setActiveChannel] = useState("newsletter");
-  const [drafts, setDrafts] = useState(mockDrafts);
+  const [drafts, setDrafts] = useState<Array<DraftI>>();
+  const { data } = useQuery({
+    queryKey: ["contentdraft"],
+    queryFn: ContentDraftService,
+  });
 
-  const currentDraft = drafts[activeChannel];
+  useEffect(() => {
+    if (data) setDrafts(data);
+    console.log({ drafts });
+  }, [data]);
+
+  const currentDraft = drafts?.find(
+    (d: DraftI) => d.typeContent === activeChannel,
+  );
 
   const handleChange = (value: string) => {
-    setDrafts((prev) => ({
-      ...prev,
-      [activeChannel]: { ...prev[activeChannel], content: value },
-    }));
+    setDrafts((prev) =>
+      prev?.map((draft) =>
+        draft.typeContent === activeChannel
+          ? { ...draft, content: value }
+          : draft,
+      ),
+    );
   };
 
-  const handleApprove = () => {
-    setDrafts((prev) => ({
-      ...prev,
-      [activeChannel]: { ...prev[activeChannel], status: "approved" },
-    }));
-    toast.success("Draft approved!");
+  const { mutate } = useMutation({
+    mutationFn: IsPublishedDraftService,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      toast.success(data?.message);
+    },
+  });
+
+  const handleApprove = (
+    id: string,
+    isPublished: boolean,
+    content: string,
+    type: string,
+  ) => {
+    mutate({ id, isPublished, content, type });
   };
 
   return (
-    <Card className="rounded-[40px] border-none shadow-sm min-h-[500px] md:min-h-[700px] flex flex-col overflow-hidden">
+    <Card className="rounded-[40px] border-none shadow-sm min-h-125 md:min-h-175 flex flex-col overflow-hidden">
       <CardHeader className="flex flex-col sm:flex-row items-center justify-between gap-8 pb-10 pt-8 px-10 border-b">
         <div className="text-center sm:text-left">
           <CardTitle className="text-2xl md:text-3xl font-serif italic mb-1.5">
@@ -77,7 +91,7 @@ export function ContentDrafts() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col pt-10 px-10 pb-10">
-        {!currentDraft.content ? (
+        {!currentDraft ? (
           <EmptyDraft />
         ) : (
           <DraftEditor

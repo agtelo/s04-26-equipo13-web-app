@@ -3,14 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Channel, Draft } from "@/interfaces";
+import { Channel, DraftI } from "@/interfaces";
 
 interface DraftEditorProps {
-  draft: Draft;
+  draft: DraftI;
   activeChannel: string;
   channels: Channel[];
   onChange: (value: string) => void;
-  onApprove: () => void;
+  onApprove: (
+    id: string,
+    isPublished: boolean,
+    content: string,
+    type: string,
+  ) => void;
 }
 
 export function DraftEditor({
@@ -36,14 +41,14 @@ export function DraftEditor({
             Active Template
           </p>
         </div>
-        {draft.status === "approved" && (
+        {draft.is_published && (
           <span className="bg-green-500/10 text-green-600 text-[10px] font-black uppercase tracking-widest rounded-full px-5 h-8 flex items-center gap-2">
             <CheckCircle2 className="w-3.5 h-3.5" /> Approved
           </span>
         )}
       </div>
       <Textarea
-        className="flex-1 w-full p-8 bg-secondary/10 rounded-[32px] border-none text-base leading-relaxed resize-none focus-visible:ring-primary/10 transition-all min-h-[300px] shadow-inner"
+        className="flex-1 w-full p-8 bg-secondary/10 rounded-[32px] border-none text-base leading-relaxed resize-none focus-visible:ring-primary/10 transition-all min-h-75 shadow-inner"
         value={draft.content}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Start writing..."
@@ -58,17 +63,26 @@ export function DraftEditor({
           >
             <Copy className="w-4 h-4" /> Copy
           </Button>
-          <Button
-            variant="outline"
-            className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
-          >
-            <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
-            AI Draft
-          </Button>
+          {!draft.is_published && (
+            <Button
+              variant="outline"
+              className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
+            >
+              <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+              AI Draft
+            </Button>
+          )}
         </div>
-        {draft.status !== "approved" && (
+        {!draft.is_published && (
           <Button
-            onClick={onApprove}
+            onClick={() =>
+              onApprove(
+                draft.id,
+                draft.is_published,
+                draft.content,
+                draft.typeContent,
+              )
+            }
             className="rounded-full text-[10px] font-black uppercase tracking-widest px-10 h-12 gap-2 shadow-xl"
           >
             <CheckCircle2 className="w-4 h-4" /> Approve Draft
@@ -78,3 +92,4 @@ export function DraftEditor({
     </div>
   );
 }
+
