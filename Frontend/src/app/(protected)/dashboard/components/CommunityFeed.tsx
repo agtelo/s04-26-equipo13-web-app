@@ -66,8 +66,8 @@ export function CommunityFeed() {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
-      toast.success("Draft Generado");
+    onSuccess: (data) => {
+      toast.success(data?.message);
     },
   });
 
@@ -92,22 +92,22 @@ export function CommunityFeed() {
           <RefreshCw className="w-5 h-5" />
         </Button>
       </CardHeader>
-   <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8">
-  {isLoading ? (
-    <div className="space-y-6">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <ActivityCardSkeleton key={i} />
-      ))}
-    </div>
-  ) : mockActivities.length === 0 ? (
-    <ActivityCardEmpty />
-  ) : (
-    <div className="space-y-6">
-      {mockActivities.map((activity) => (
-        <ActivityCard key={activity.id} activity={activity} />
-      ))}
-    </div>
-  )}
+      <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8">
+        {isLoading ? (
+          <div className="space-y-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <ActivityCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : mockActivities.length === 0 ? (
+          <ActivityCardEmpty />
+        ) : (
+          <div className="space-y-6">
+            {mockActivities.map((activity) => (
+              <ActivityCard key={activity.id} activity={activity} />
+            ))}
+          </div>
+        )}
         {mockActivities.length > 0 && (
           <Button
             onClick={handleAIGenerate}

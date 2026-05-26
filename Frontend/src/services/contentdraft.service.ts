@@ -45,30 +45,19 @@ export const IsPublishedDraftService = async ({
 }) => {
   const cookieStore = await cookies();
   try {
-    await axios.put(
+    const res = await axios.put(
       `${process.env.API_URL}/drafts/${id}`,
-      { is_published: isPublished, content },
+      { is_published: true, content },
       {
         headers: {
           Authorization: `Bearer ${cookieStore.get("token")?.value}`,
         },
       },
     );
-
-    await axios.post(
-      `${process.env.API_URL}/api/publish/${type}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${cookieStore.get("token")?.value}`,
-        },
-      },
-    );
-
     revalidatePath("/dashboard");
 
     return {
-      message: "Draft approved",
+      message: res.data.message,
     };
   } catch (error) {
     console.log(error);

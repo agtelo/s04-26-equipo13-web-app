@@ -20,6 +20,7 @@ import {
   IsPublishedDraftService,
 } from "@/services/contentdraft.service";
 import { DraftEditorSkeleton } from "@/components/skeletons/DraftEditorSkeleton";
+import { useRouter } from "next/navigation";
 
 const CHANNELS = [
   { id: "newsletter", name: "Newsletter", icon: Mail, color: "text-blue-500" },
@@ -44,6 +45,7 @@ export function ContentDrafts() {
     (d: DraftI) => d.typeContent === activeChannel,
   );
 
+  const router = useRouter();
   const handleChange = (value: string) => {
     setDrafts((prev) =>
       prev?.map((draft) =>
@@ -61,6 +63,7 @@ export function ContentDrafts() {
     },
     onSuccess: (data) => {
       toast.success(data?.message);
+      router.push("/dashboard");
     },
   });
 
@@ -92,20 +95,20 @@ export function ContentDrafts() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col pt-10 px-10 pb-10">
-  {isLoading ? (
-    <DraftEditorSkeleton />
-  ) : !currentDraft ? (
-    <EmptyDraft />
-  ) : (
-    <DraftEditor
-      draft={currentDraft}
-      activeChannel={activeChannel}
-      channels={CHANNELS}
-      onChange={handleChange}
-      onApprove={handleApprove}
-    />
-  )}
-</CardContent>
+        {isLoading ? (
+          <DraftEditorSkeleton />
+        ) : !currentDraft ? (
+          <EmptyDraft />
+        ) : (
+          <DraftEditor
+            draft={currentDraft}
+            activeChannel={activeChannel}
+            channels={CHANNELS}
+            onChange={handleChange}
+            onApprove={handleApprove}
+          />
+        )}
+      </CardContent>
     </Card>
   );
 }
