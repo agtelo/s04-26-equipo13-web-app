@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { Channel, DraftI } from "@/interfaces";
+import { ModalApprovedDraft } from "@/components/shared";
 
 interface DraftEditorProps {
   draft: DraftI;
@@ -25,6 +26,7 @@ export function DraftEditor({
   onChange,
   onApprove,
 }: DraftEditorProps) {
+  console.log({ draft });
   const handleCopy = () => {
     navigator.clipboard.writeText(draft.content);
     toast.success("Copied to clipboard");
@@ -73,23 +75,14 @@ export function DraftEditor({
             </Button>
           )}
         </div>
-        {!draft.is_published && (
-          <Button
-            onClick={() =>
-              onApprove(
-                draft.id,
-                draft.is_published,
-                draft.content,
-                draft.typeContent,
-              )
-            }
-            className="rounded-full text-[10px] font-black uppercase tracking-widest px-10 h-12 gap-2 shadow-xl"
-          >
-            <CheckCircle2 className="w-4 h-4" /> Approve Draft
-          </Button>
-        )}
+        <ModalApprovedDraft
+          isPublished={draft.is_published}
+          id={draft.id}
+          content={draft.content}
+          typeContent={draft.typeContent}
+          onApprove={onApprove}
+        />
       </div>
     </div>
   );
 }
-

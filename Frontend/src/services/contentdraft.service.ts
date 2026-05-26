@@ -1,6 +1,6 @@
 "use server";
 
-import { Draft, DraftI } from "@/interfaces";
+import { DraftI } from "@/interfaces";
 import axios, { isAxiosError } from "axios";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -23,6 +23,8 @@ export const ContentDraftService = async () => {
       };
     });
 
+    revalidatePath("/dashboard");
+
     return formatedDraft;
   } catch (error) {
     console.log(error);
@@ -34,9 +36,7 @@ export const ContentDraftService = async () => {
 
 export const IsPublishedDraftService = async ({
   id,
-  isPublished,
   content,
-  type,
 }: {
   id: string;
   isPublished: boolean;
@@ -55,6 +55,7 @@ export const IsPublishedDraftService = async ({
       },
     );
     revalidatePath("/dashboard");
+    revalidatePath(`/dashboard/${id}`);
 
     return {
       message: res.data.message,

@@ -14,7 +14,7 @@ import { ChannelTabs } from "./ChannelTabs";
 import { DraftEditor } from "./DraftEditor";
 import { EmptyDraft } from "./DraftEmpty";
 import { DraftI } from "@/interfaces";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ContentDraftService,
   IsPublishedDraftService,
@@ -38,14 +38,12 @@ export function ContentDrafts() {
 
   useEffect(() => {
     if (data) setDrafts(data);
-    console.log({ drafts });
   }, [data]);
 
   const currentDraft = drafts?.find(
     (d: DraftI) => d.typeContent === activeChannel,
   );
 
-  const router = useRouter();
   const handleChange = (value: string) => {
     setDrafts((prev) =>
       prev?.map((draft) =>
@@ -56,14 +54,18 @@ export function ContentDrafts() {
     );
   };
 
+  const query = useQueryClient();
+
   const { mutate } = useMutation({
     mutationFn: IsPublishedDraftService,
     onError: (error) => {
       toast.error(error.message);
     },
     onSuccess: (data) => {
+      query.invalidateQueries({
+        queryKey: ["contentdraft"],
+      });
       toast.success(data?.message);
-      router.push("/dashboard");
     },
   });
 
