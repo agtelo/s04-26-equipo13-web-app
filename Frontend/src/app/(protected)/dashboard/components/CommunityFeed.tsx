@@ -100,7 +100,7 @@ export function CommunityFeed() {
               <ActivityCardSkeleton key={i} />
             ))}
           </div>
-        ) : mockActivities.length === 0 ? (
+        ) : activities.length === 0 ? (
           <ActivityCardEmpty />
         ) : (
           <div className="space-y-6">
@@ -109,7 +109,7 @@ export function CommunityFeed() {
             ))}
           </div>
         )}
-        {mockActivities.length > 0 && (
+        {activities.length > 0 && (
           <Button
             onClick={handleAIGenerate}
             className="w-full mt-10 py-8 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all gap-3"
