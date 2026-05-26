@@ -60,6 +60,7 @@ export function CommunityFeed() {
     queryKey: ["communityfeed"],
     queryFn: CommunityFeedService,
   });
+    const activities = data || [];
 
   const { mutate } = useMutation({
     mutationFn: GenerationDraftNew,
@@ -92,7 +93,7 @@ export function CommunityFeed() {
           <RefreshCw className="w-5 h-5" />
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8">
+      <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8 scrollbar-thin">
         {isLoading ? (
           <div className="space-y-6">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -103,7 +104,7 @@ export function CommunityFeed() {
           <ActivityCardEmpty />
         ) : (
           <div className="space-y-6">
-            {mockActivities.map((activity) => (
+            {activities.map((activity) => (
               <ActivityCard key={activity.id} activity={activity} />
             ))}
           </div>
