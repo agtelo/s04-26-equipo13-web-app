@@ -103,7 +103,7 @@ startServer();
 
 // Paso 4: utilizamos cron para contar los dias de la semana y verificamos q sea correcto, para enviar el informe semanal
 cron.schedule("09 9 * * 2", async () => {
-    // 0-> minutos, 18-> hora, *-> valores nulos, 5-> dia de la semana en este caso viernes (0 = domingo, ..., 5 = viernes)
+    // 0-> minutos, 9-> hora, *-> valores nulos, 5-> dia de la semana en este caso viernes (0 = domingo, ..., 5 = viernes)
 
     try{
 

@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const userModel = require("../models/userModel");
 const jwt = require("../helpers/jwt");
+const { sendResetEmail } = require("../helpers/email");
+const jsonwebtoken = require("jsonwebtoken");
 
 const profile = (req, res) => {
     return res.status(200).json({
@@ -123,8 +125,98 @@ const login = async (req, res) => {
     }
 };
 
+const forgotPassword = async (req, res) => {
+
+    const { email } = req.body;
+
+    if (!email) {
+
+        return res.status(400).json({ message: "Email is required" });
+    }
+
+    try {
+
+        const user = await userModel.findOne({
+
+            where: { email: email.toLowerCase() }
+        });
+
+        if (!user) {
+
+            return res.status(200).json({
+                message: "If the email exists, you will receive a reset link"
+            });
+        }
+
+        // Token de 15 minutos
+        const resetToken = jsonwebtoken.sign(
+            { id: user.id, email: user.email, type: 'reset' },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' }
+        );
+
+        await sendResetEmail(user.email, resetToken);
+
+        return res.status(200).json({
+
+            message: "Reset email sent successfully",
+            resetToken // Solo para pruebas
+        });
+
+    } catch (error) {
+
+        console.log("Error sending email:", error);
+
+        return res.status(500).json({ message: "Error sending reset email" });
+    }
+};
+
+const resetPassword = async (req, res) => {
+
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+
+        return res.status(400).json({ message: "Token and new password are required" });
+    }
+
+    if (newPassword.length < 6) {
+
+        return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
+    try {
+
+        const payload = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+
+        if (payload.type !== 'reset') {
+            return res.status(400).json({ message: "Invalid token" });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await userModel.update(
+            { password: hashedPassword },
+            { where: { id: payload.id } }
+        );
+
+        return res.status(200).json({ message: "Password updated successfully" });
+
+    } catch (error) {
+
+        if (error.name === 'TokenExpiredError') {
+
+            return res.status(400).json({ message: "Reset link expired" });
+        }
+
+        return res.status(400).json({ message: "Invalid token" });
+    }
+};
+
 module.exports = { 
     profile,
     register, 
-    login
+    login,
+    forgotPassword,
+    resetPassword
 };

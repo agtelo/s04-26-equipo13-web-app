@@ -34,7 +34,7 @@ const triggerGeneration = async (req, res) => {
         const sortedMessages = messages
             .filter(messages => messages.reactions > 0) //Filtramos solo los mensajes que tienen reacciones
             .sort((a, b) => b.reactions - a.reactions) //Ordenamos los mensajes por número de reacciones de mayor a menor
-            .slice(0, 5); //Tomamos solo los 5 mensajes más populares
+            .slice(0, 15); //Tomamos solo los 15 mensajes más populares
         
     
         //Guardamos los mensajes más populares en la tabla CommunityFeed, asociándolos con el log de generación actual
