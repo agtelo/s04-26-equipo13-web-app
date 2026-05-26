@@ -43,11 +43,14 @@ const getDraftById = async (req, res) => {
 const updateDraft = async (req, res) => {
     
     const { id } = req.params;
-    const { content } = req.body;
+    const { content, is_published } = req.body;
 
-    if(!content){
+    if (!content && is_published === undefined) {
 
-        return res.status(400).json({message: "The content is required"});
+        return res.status(400).json({ 
+            
+            message: "Is required 'content' or 'is_published'" 
+        });
     }
 
     try{
@@ -58,8 +61,18 @@ const updateDraft = async (req, res) => {
             return res.status(404).json({message: "Draft not found"});
         }
 
-        //Actualizamos el contenido del borrador
-        await draft.update({ content });
+        const updateData = {};
+
+        if (content !== undefined){
+            updateData.content = content;
+        } 
+
+        if (is_published !== undefined){
+
+            updateData.is_published = is_published;
+        } 
+
+        await draft.update(updateData);
 
         return res.status(200).json({message: "Draft updated", draft});
 

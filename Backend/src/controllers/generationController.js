@@ -32,7 +32,7 @@ const triggerGeneration = async (req, res) => {
         await communityFeedSchema.destroy({ truncate: true}); //Limpiamos la tabla de CommunityFeed antes de insertar los nuevos mensajes
 
         const sortedMessages = messages
-            .filter(msg => msg.reactions > 0) //Filtramos solo los mensajes que tienen reacciones
+            .filter(messages => messages.reactions > 0) //Filtramos solo los mensajes que tienen reacciones
             .sort((a, b) => b.reactions - a.reactions) //Ordenamos los mensajes por número de reacciones de mayor a menor
             .slice(0, 5); //Tomamos solo los 5 mensajes más populares
         
@@ -41,9 +41,9 @@ const triggerGeneration = async (req, res) => {
         for(const msg of sortedMessages){
             
             await communityFeedSchema.create({
-                user_name: msg.user_name,
+                user_name: msg.author,
                 content: msg.content,
-                channel_name: msg.channel_name || null,
+                channel_name: msg.channel || null,
                 original_date: msg.date,
                 reactions: msg.reactions,
                 generation_id: log.id

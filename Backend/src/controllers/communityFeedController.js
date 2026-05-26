@@ -1,5 +1,5 @@
 const { json } = require("sequelize");
-const communityFeedModel = require('../models/communityFeedModel');
+const communityFeedModel = require('../models/communityFeedmodel');
 
 const getCommunityFeed = async (req, res) => {
 
