@@ -50,10 +50,12 @@ const triggerGeneration = async (req, res) => {
             });
         };
 
-        //Paso 3: Generar contenido con Gemini
+        //Generar contenido con Gemini
         const drafts = await generateContent(messages, GEMINI_KEY);
         
-        //Paso 4: Guardar los borradores en la base de datos
+        await contentDraftSchema.destroy({ truncate: true }); //Limpiamos la tabla de borradores anteriores
+
+        //Guardar los borradores en la base de datos
         const draftTypes = ['newsletter', 'twitter', 'reddit'];
         
         //Guardamos cada tipo de contenido como un registro separado en la tabla content_drafts
