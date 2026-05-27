@@ -3,11 +3,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendResetEmail = async (to, resetToken) => {
 
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/new-password?token=${resetToken}`;
 
     const { data, error } = await resend.emails.send({
 
-        from: 'TalentCircle <onboarding@resend.dev>',
+        from: 'TalentCircle <onboarding@luidev.online>',
         to: [to],
         subject: 'Restablecer tu contraseña - TalentCircle',
         html: `

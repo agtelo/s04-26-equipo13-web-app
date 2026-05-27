@@ -1,5 +1,6 @@
 const { json } = require("sequelize");
 const contentDraftModel = require("../models/contentDraftModel");
+const { regenerateDraftFromContent } = require("../processor/content-generator");
 
 const getAllDrafts = async (req, res) => {
 
@@ -107,9 +108,39 @@ const deleteDraft = async (req, res) => {
     }
 };
 
+const regenerateDraft = async (req, res) => {
+
+    const { id } = req.params;
+
+    try{
+        const draft = await contentDraftModel.findByPk(id);
+
+        if(!draft){
+            return res.status(404).json({message: "Draft not found"});
+        }
+
+        const result = await regenerateDraftFromContent(
+            draft.content,
+            process.env.GEMINI_API,
+            draft.typeContent
+        );
+
+        const newContent = result[draft.typeContent];
+
+        await draft.update({ content: newContent });
+
+        return res.status(200).json({message: "Draft regenerated", draft});
+
+    } catch(error){
+
+        return res.status(500).json({message: "Failed to regenerate draft", error: error.message});
+    }
+};
+
 module.exports = { 
     getAllDrafts,
     getDraftById,
     updateDraft,
-    deleteDraft
+    deleteDraft,
+    regenerateDraft
 };

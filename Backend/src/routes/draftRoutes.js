@@ -7,6 +7,7 @@ router.get("/", authMiddleware, draftController.getAllDrafts);
 router.get("/:id", authMiddleware, draftController.getDraftById);
 router.put("/:id", authMiddleware, draftController.updateDraft);
 router.delete("/:id", authMiddleware, draftController.deleteDraft);
+router.post("/:id/regenerate", authMiddleware, draftController.regenerateDraft);
 
 module.exports = router;
 
