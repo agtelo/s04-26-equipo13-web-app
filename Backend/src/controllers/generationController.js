@@ -56,7 +56,7 @@ const triggerGeneration = async (req, res) => {
         await contentDraftSchema.destroy({ truncate: true }); //Limpiamos la tabla de borradores anteriores
 
         //Guardar los borradores en la base de datos
-        const draftTypes = ['newsletter', 'twitter', 'reddit'];
+        const draftTypes = ['newsletter', 'twitter', 'bluesky'];
         
         //Guardamos cada tipo de contenido como un registro separado en la tabla content_drafts
         for (const type of draftTypes) {

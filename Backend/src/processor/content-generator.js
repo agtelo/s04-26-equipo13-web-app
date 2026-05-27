@@ -21,13 +21,13 @@ async function generateContent(messages, apiKey) {
 
     1. **NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)
     2. **TWITTER** (máximo 280 caracteres, directo y con hashtags)
-    3. **REDDIT** (formato medio, 1-2 parrafos, tono conversacional)
+    3. **BLUESKY** (formato medio, 1-2 parrafos, tono conversacional)
 
     Respondé en formato JSON con esta estructura:
     {
         "newsletter": "...",
         "twitter": "...",
-        "reddit": "..."
+        "bluesky": "..."
     }
     Solo respondé con el JSON, sin texto adicional.
     `;
@@ -54,7 +54,7 @@ async function generateContent(messages, apiKey) {
         drafts = {
             newsletter: "Error al generar el newsletter",
             twitter: "Error al generar el tweet",
-            reddit: "Error al generar el reddit"
+            bluesky: "Error al generar el bluesky"
         };
     }
 
@@ -64,7 +64,7 @@ async function generateContent(messages, apiKey) {
 const TYPE_PROMPTS = {
     newsletter: "**NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)",
     twitter: "**TWITTER** (máximo 280 caracteres, directo y con hashtags)",
-    reddit: "**REDDIT** (formato medio, 1-2 parrafos, tono conversacional)"
+    bluesky: "**BLUESKY** (formato medio, 1-2 parrafos, tono conversacional)"
 };
 
 async function regenerateContent(messages, apiKey, type) {
@@ -103,4 +103,37 @@ async function regenerateContent(messages, apiKey, type) {
     }
 }
 
-module.exports = { generateContent, regenerateContent };
+async function regenerateDraftFromContent(existingContent, apiKey, type) {
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const prompt = `
+    Sos un editor de contenido de una comunidad tech llamada TalentCircle.
+    
+    Este es el borrador actual:
+    ${existingContent}
+    
+    Genera una version diferente y mejorada para el formato:
+    ${TYPE_PROMPTS[type]}
+    
+    Respondé en formato JSON con esta estructura:
+    { "${type}": "..." }
+    Solo respondé con el JSON, sin texto adicional.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = result.response.text();
+    const clean = response.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+    try {
+
+        return JSON.parse(clean);
+
+    } catch (error) {
+        
+        return { message: "Error regenerating content", error: error };
+    }
+};
+
+module.exports = { generateContent, regenerateContent, regenerateDraftFromContent };
