@@ -1,4 +1,4 @@
-import { Copy, CheckCircle2, Sparkles } from "lucide-react";
+import { Copy, CheckCircle2, Sparkles, StarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
@@ -18,7 +18,8 @@ interface DraftEditorProps {
     type: string,
   ) => void;
   isPending: boolean;
-  handleRegenerateDraft: (type: string, message: string) => void;
+  isPendindRegenerate: boolean;
+  handleRegenerateDraft: (id: string) => void;
 }
 
 export function DraftEditor({
@@ -29,6 +30,7 @@ export function DraftEditor({
   onApprove,
   isPending,
   handleRegenerateDraft,
+  isPendindRegenerate,
 }: DraftEditorProps) {
   const handleCopy = () => {
     navigator.clipboard.writeText(draft.content);
@@ -68,18 +70,26 @@ export function DraftEditor({
           >
             <Copy className="w-4 h-4" /> Copy
           </Button>
-          {!draft.is_published && (
-            <Button
-              onClick={() =>
-                handleRegenerateDraft(draft.typeContent, draft.content)
-              }
-              variant="outline"
-              className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
-            >
-              <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
-              AI Draft
-            </Button>
-          )}
+          {!draft.is_published &&
+            (!isPendindRegenerate ? (
+              <Button
+                onClick={() => handleRegenerateDraft(draft.id)}
+                variant="outline"
+                className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
+              >
+                <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                AI Draft
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
+              >
+                <StarIcon size={6} className="animate-spin" />
+                <StarIcon size={6} className="animate-spin" />
+                <StarIcon size={6} className="animate-spin" />
+              </Button>
+            ))}
         </div>
         <ModalApprovedDraft
           isPublished={draft.is_published}

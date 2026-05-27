@@ -65,15 +65,19 @@ export function ContentDrafts() {
     },
   });
 
-  const { mutate: mutateRegenerate } = useMutation({
-    mutationFn: RegenerateDraft,
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    onSuccess: (data) => {
-      toast.success(data?.message);
-    },
-  });
+  const { mutate: mutateRegenerate, isPending: isPendindRegenerate } =
+    useMutation({
+      mutationFn: RegenerateDraft,
+      onError: (error) => {
+        toast.error(error.message);
+      },
+      onSuccess: (data) => {
+        query.invalidateQueries({
+          queryKey: ["contentdraft"],
+        });
+        toast.success(data?.message);
+      },
+    });
 
   const handleApprove = (
     id: string,
@@ -84,8 +88,8 @@ export function ContentDrafts() {
     mutate({ id, isPublished, content, type });
   };
 
-  const handleRegenerateDraft = (type: string, message: string) => {
-    mutateRegenerate({ type, message });
+  const handleRegenerateDraft = (id: string) => {
+    mutateRegenerate({ id });
   };
 
   return (
@@ -120,6 +124,7 @@ export function ContentDrafts() {
             onApprove={handleApprove}
             isPending={isPending}
             handleRegenerateDraft={handleRegenerateDraft}
+            isPendindRegenerate={isPendindRegenerate}
           />
         )}
       </CardContent>

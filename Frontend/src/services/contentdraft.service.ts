@@ -93,22 +93,16 @@ export const GenerationDraftNew = async () => {
 };
 
 interface RegeranteDraftProps {
-  type: string;
-  message: string;
+  id: string;
 }
 
-export const RegenerateDraft = async ({
-  type,
-  message,
-}: RegeranteDraftProps) => {
+export const RegenerateDraft = async ({ id }: RegeranteDraftProps) => {
   const cookieStore = await cookies();
+
   try {
-    await axios.post(
-      `${process.env.API_URL}/api/regenerate`,
-      {
-        type,
-        messages: message,
-      },
+    const { data } = await axios.post<{ message: string }>(
+      `${process.env.API_URL}/drafts/${id}/regenerate`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${cookieStore.get("token")?.value}`,
@@ -117,7 +111,7 @@ export const RegenerateDraft = async ({
     );
 
     return {
-      message: "Generate Draft",
+      message: data.message,
     };
   } catch (error) {
     console.log(error);
