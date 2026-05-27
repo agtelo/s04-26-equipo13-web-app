@@ -91,3 +91,38 @@ export const GenerationDraftNew = async () => {
     }
   }
 };
+
+interface RegeranteDraftProps {
+  type: string;
+  message: string;
+}
+
+export const RegenerateDraft = async ({
+  type,
+  message,
+}: RegeranteDraftProps) => {
+  const cookieStore = await cookies();
+  try {
+    await axios.post(
+      `${process.env.API_URL}/api/regenerate`,
+      {
+        type,
+        messages: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${cookieStore.get("token")?.value}`,
+        },
+      },
+    );
+
+    return {
+      message: "Generate Draft",
+    };
+  } catch (error) {
+    console.log(error);
+    if (error && isAxiosError(error)) {
+      throw new Error(error.response?.data.message);
+    }
+  }
+};

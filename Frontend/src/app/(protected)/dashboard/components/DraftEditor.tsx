@@ -17,6 +17,8 @@ interface DraftEditorProps {
     content: string,
     type: string,
   ) => void;
+  isPending: boolean;
+  handleRegenerateDraft: (type: string, message: string) => void;
 }
 
 export function DraftEditor({
@@ -25,8 +27,9 @@ export function DraftEditor({
   channels,
   onChange,
   onApprove,
+  isPending,
+  handleRegenerateDraft,
 }: DraftEditorProps) {
-  console.log({ draft });
   const handleCopy = () => {
     navigator.clipboard.writeText(draft.content);
     toast.success("Copied to clipboard");
@@ -67,6 +70,9 @@ export function DraftEditor({
           </Button>
           {!draft.is_published && (
             <Button
+              onClick={() =>
+                handleRegenerateDraft(draft.typeContent, draft.content)
+              }
               variant="outline"
               className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
             >
@@ -81,6 +87,7 @@ export function DraftEditor({
           content={draft.content}
           typeContent={draft.typeContent}
           onApprove={onApprove}
+          isPending={isPending}
         />
       </div>
     </div>

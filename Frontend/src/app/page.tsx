@@ -1,11 +1,5 @@
-import { ModeToggle } from "@/components/shared/ModeToggle";
-import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div>
-      <Button>Hola Mundo</Button>
-      <ModeToggle />
-    </div>
-  );
+  redirect("/dashboard");
 }

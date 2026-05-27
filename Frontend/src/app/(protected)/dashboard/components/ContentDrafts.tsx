@@ -18,9 +18,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ContentDraftService,
   IsPublishedDraftService,
+  RegenerateDraft,
 } from "@/services/contentdraft.service";
 import { DraftEditorSkeleton } from "@/components/skeletons/DraftEditorSkeleton";
-import { useRouter } from "next/navigation";
+import { useDraftStore } from "@/store/contentdraft.store";
 
 const CHANNELS = [
   { id: "newsletter", name: "Newsletter", icon: Mail, color: "text-blue-500" },
@@ -29,8 +30,9 @@ const CHANNELS = [
 ];
 
 export function ContentDrafts() {
+  const { drafts, setDrafts, updatedDraftContent } = useDraftStore();
   const [activeChannel, setActiveChannel] = useState("newsletter");
-  const [drafts, setDrafts] = useState<Array<DraftI>>();
+
   const { data, isLoading } = useQuery({
     queryKey: ["contentdraft"],
     queryFn: ContentDraftService,
@@ -45,18 +47,12 @@ export function ContentDrafts() {
   );
 
   const handleChange = (value: string) => {
-    setDrafts((prev) =>
-      prev?.map((draft) =>
-        draft.typeContent === activeChannel
-          ? { ...draft, content: value }
-          : draft,
-      ),
-    );
+    updatedDraftContent(activeChannel, value);
   };
 
   const query = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: IsPublishedDraftService,
     onError: (error) => {
       toast.error(error.message);
@@ -69,6 +65,16 @@ export function ContentDrafts() {
     },
   });
 
+  const { mutate: mutateRegenerate } = useMutation({
+    mutationFn: RegenerateDraft,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      toast.success(data?.message);
+    },
+  });
+
   const handleApprove = (
     id: string,
     isPublished: boolean,
@@ -76,6 +82,10 @@ export function ContentDrafts() {
     type: string,
   ) => {
     mutate({ id, isPublished, content, type });
+  };
+
+  const handleRegenerateDraft = (type: string, message: string) => {
+    mutateRegenerate({ type, message });
   };
 
   return (
@@ -108,6 +118,8 @@ export function ContentDrafts() {
             channels={CHANNELS}
             onChange={handleChange}
             onApprove={handleApprove}
+            isPending={isPending}
+            handleRegenerateDraft={handleRegenerateDraft}
           />
         )}
       </CardContent>

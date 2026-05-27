@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/Logo";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, StarIcon } from "lucide-react";
 import { ActivityCard } from "./ActivityCard";
 import ActivityCardEmpty from "./ActivityCardEmpty";
 import { Activity } from "@/interfaces/activity.interface";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CommunityFeedService } from "@/services/communityfeed.service";
 import { GenerationDraftNew } from "@/services/contentdraft.service";
 import { toast } from "sonner";
@@ -60,14 +60,19 @@ export function CommunityFeed() {
     queryKey: ["communityfeed"],
     queryFn: CommunityFeedService,
   });
-    const activities = data || [];
+  const activities = data || [];
 
-  const { mutate } = useMutation({
+  const query = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
     mutationFn: GenerationDraftNew,
     onError: (error) => {
       toast.error(error.message);
     },
     onSuccess: (data) => {
+      query.invalidateQueries({
+        queryKey: ["contentdraft"],
+      });
       toast.success(data?.message);
     },
   });
@@ -109,15 +114,26 @@ export function CommunityFeed() {
             ))}
           </div>
         )}
-        {activities.length > 0 && (
-          <Button
-            onClick={handleAIGenerate}
-            className="w-full mt-10 py-8 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all gap-3"
-          >
-            <Logo className="w-6 h-6" />
-            Generate AI Drafts
-          </Button>
-        )}
+        {activities.length > 0 &&
+          (isPending ? (
+            <Button
+              disabled
+              onClick={handleAIGenerate}
+              className=" w-full mt-10 py-8 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all gap-3"
+            >
+              <StarIcon size={6} className="animate-spin" />
+              <StarIcon size={6} className="animate-spin" />
+              <StarIcon size={6} className="animate-spin" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleAIGenerate}
+              className="w-full mt-10 py-8 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all gap-3"
+            >
+              <Logo className="w-6 h-6" />
+              Generate AI Drafts
+            </Button>
+          ))}
       </CardContent>
     </Card>
   );
