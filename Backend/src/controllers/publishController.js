@@ -1,5 +1,7 @@
 const { publishTweet } = require("../publisher/twitter-publisher");
 const { publishPost } = require("../publisher/reddit-publisher");
+const { Bluesky } = require("../publisher/bluesky-publisher");
+const { publishEmail } = require("../publisher/email-publisher");
 
 const publishTwitter = async (req, res) => {
 
@@ -38,4 +40,44 @@ const publishReddit = async (req, res) => {
     }
 };
 
-module.exports = { publishTwitter, publishReddit};
+const publishBluesky = async (req, res) => {
+
+    const { content } = req.body;
+
+    if(!content){
+        return res.status(400).json({ message: "The content is required" });
+    }
+
+    try{
+
+        const result = await Bluesky(content);
+
+        return res.status(200).json({ success: true, ...result });
+
+    } catch(error){
+
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+const publishNewsletter = async (req, res) => {
+
+    const { to, subject, htmlContent } = req.body;
+
+    if(!to || !htmlContent){
+
+        return res.status(400).json({ message: "The 'to' and 'htmlContent' fields are required" });
+    }
+
+    try{
+        const result = await publishEmail(to, subject, htmlContent);
+
+        return res.status(200).json({ success: true, ...result });
+
+    } catch (error) {
+
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = { publishTwitter, publishReddit, publishBluesky, publishNewsletter };
