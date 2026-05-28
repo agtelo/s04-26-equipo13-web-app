@@ -30,7 +30,8 @@ const CHANNELS = [
 ];
 
 export function ContentDrafts() {
-  const { drafts, setDrafts, updatedDraftContent, publishDraft } = useDraftStore();
+  const { drafts, setDrafts, updatedDraftContent, publishDraft } =
+    useDraftStore();
   const [activeChannel, setActiveChannel] = useState("newsletter");
 
   const { data, isLoading } = useQuery({
@@ -52,7 +53,7 @@ export function ContentDrafts() {
 
   const query = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: PublishDraftService,
     onError: (error) => {
       toast.error(error.message);
@@ -134,7 +135,7 @@ export function ContentDrafts() {
             channels={CHANNELS}
             onChange={handleChange}
             onApprove={handleApprove}
-            isPending={currentDraft.is_published || isPendindRegenerate}
+            isPending={isPending}
             handleRegenerateDraft={handleRegenerateDraft}
             isPendindRegenerate={isPendindRegenerate}
           />
@@ -143,3 +144,4 @@ export function ContentDrafts() {
     </Card>
   );
 }
+

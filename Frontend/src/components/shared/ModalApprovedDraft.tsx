@@ -39,9 +39,8 @@ export const ModalApprovedDraft = (props: Props) => {
             </Button>
           ) : (
             <Button className="rounded-full text-[10px] font-black uppercase tracking-widest px-10 h-12 gap-2 shadow-xl">
-              <StarIcon size={6} className="animate-spin" />
-              <StarIcon size={6} className="animate-spin" />
-              <StarIcon size={6} className="animate-spin" />
+              <CheckCircle2 className="w-4 h-4 animate-pulse" />
+              Approving Draft
             </Button>
           ))}
       </AlertDialogTrigger>
