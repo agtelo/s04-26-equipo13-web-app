@@ -123,9 +123,8 @@ export function CommunityFeed() {
               onClick={handleAIGenerate}
               className=" w-full mt-10 py-8 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all gap-3"
             >
-              <StarIcon size={6} className="animate-spin" />
-              <StarIcon size={6} className="animate-spin" />
-              <StarIcon size={6} className="animate-spin" />
+              <Logo className="animate-spin" />
+              Generating draft
             </Button>
           ) : (
             <Button

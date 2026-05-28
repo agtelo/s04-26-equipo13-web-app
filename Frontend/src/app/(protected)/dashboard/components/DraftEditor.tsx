@@ -56,6 +56,7 @@ export function DraftEditor({
       </div>
       <Textarea
         className="flex-1 w-full p-8 bg-secondary/10 rounded-[32px] border-none text-base leading-relaxed resize-none focus-visible:ring-primary/10 transition-all min-h-75 shadow-inner"
+        disabled={draft.is_published}
         value={draft.content}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Start writing..."
@@ -83,11 +84,11 @@ export function DraftEditor({
             ) : (
               <Button
                 variant="outline"
+                disabled={isPendindRegenerate}
                 className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
               >
-                <StarIcon size={6} className="animate-spin" />
-                <StarIcon size={6} className="animate-spin" />
-                <StarIcon size={6} className="animate-spin" />
+                <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform animate-pulse" />
+                Regeneration Draft
               </Button>
             ))}
         </div>

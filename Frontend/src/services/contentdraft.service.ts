@@ -55,7 +55,6 @@ export const IsPublishedDraftService = async ({
       },
     );
     revalidatePath("/dashboard");
-    revalidatePath(`/dashboard/${id}`);
 
     return {
       message: res.data.message,
