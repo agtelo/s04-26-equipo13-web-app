@@ -7,7 +7,6 @@ const cron = require("node-cron");
 const cors = require("cors");
 const { collectMessages, getAvailableChannels, collectMessagesFromAllChannels } = require("./collector/discord-collector");
 const { generateContent } = require("./processor/content-generator");
-const express = require("express");
 
 //Importamos las rutas y el modelo de la base de datos
 const userRoutes = require("./routes/userRoutes");
