@@ -34,7 +34,11 @@ export const PublishDraftService = async (payload: PublishPayload) => {
       // TODO: Implementar newsletter con Resend
       const { data } = await axios.post(
         `${process.env.API_URL}/api/publish/newsletter`,
-        { content },
+        {
+          htmlContent: content,
+          to: `${process.env.TEST_EMAIL}`,
+          subject: "TalentCirle weekly report",
+        },
         { headers },
       );
       publishResult = data;
@@ -69,4 +73,3 @@ export const PublishDraftService = async (payload: PublishPayload) => {
     throw error instanceof Error ? error : new Error("Publication failed");
   }
 };
-
