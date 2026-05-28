@@ -91,3 +91,32 @@ export const GenerationDraftNew = async () => {
     }
   }
 };
+
+interface RegeranteDraftProps {
+  id: string;
+}
+
+export const RegenerateDraft = async ({ id }: RegeranteDraftProps) => {
+  const cookieStore = await cookies();
+
+  try {
+    const { data } = await axios.post<{ message: string }>(
+      `${process.env.API_URL}/drafts/${id}/regenerate`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${cookieStore.get("token")?.value}`,
+        },
+      },
+    );
+
+    return {
+      message: data.message,
+    };
+  } catch (error) {
+    console.log(error);
+    if (error && isAxiosError(error)) {
+      throw new Error(error.response?.data.message);
+    }
+  }
+};

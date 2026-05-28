@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, StarIcon } from "lucide-react";
 
 interface Props {
   isPublished: boolean;
@@ -23,19 +23,27 @@ interface Props {
     typeContent: string,
     content: string,
   ) => void;
+  isPending: boolean;
 }
 
 export const ModalApprovedDraft = (props: Props) => {
-  const { id, isPublished, typeContent, content, onApprove } = props;
+  const { id, isPublished, typeContent, content, onApprove, isPending } = props;
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        {!isPublished && (
-          <Button className="rounded-full text-[10px] font-black uppercase tracking-widest px-10 h-12 gap-2 shadow-xl">
-            <CheckCircle2 className="w-4 h-4" />
-            Approve Draft
-          </Button>
-        )}
+        {!isPublished &&
+          (!isPending ? (
+            <Button className="rounded-full text-[10px] font-black uppercase tracking-widest px-10 h-12 gap-2 shadow-xl">
+              <CheckCircle2 className="w-4 h-4" />
+              Approve Draft
+            </Button>
+          ) : (
+            <Button className="rounded-full text-[10px] font-black uppercase tracking-widest px-10 h-12 gap-2 shadow-xl">
+              <StarIcon size={6} className="animate-spin" />
+              <StarIcon size={6} className="animate-spin" />
+              <StarIcon size={6} className="animate-spin" />
+            </Button>
+          ))}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader className="p-5">

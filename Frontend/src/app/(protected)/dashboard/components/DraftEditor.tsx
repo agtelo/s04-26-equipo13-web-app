@@ -1,4 +1,4 @@
-import { Copy, CheckCircle2, Sparkles } from "lucide-react";
+import { Copy, CheckCircle2, Sparkles, StarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
@@ -17,6 +17,9 @@ interface DraftEditorProps {
     content: string,
     type: string,
   ) => void;
+  isPending: boolean;
+  isPendindRegenerate: boolean;
+  handleRegenerateDraft: (id: string) => void;
 }
 
 export function DraftEditor({
@@ -25,8 +28,10 @@ export function DraftEditor({
   channels,
   onChange,
   onApprove,
+  isPending,
+  handleRegenerateDraft,
+  isPendindRegenerate,
 }: DraftEditorProps) {
-  console.log({ draft });
   const handleCopy = () => {
     navigator.clipboard.writeText(draft.content);
     toast.success("Copied to clipboard");
@@ -65,15 +70,26 @@ export function DraftEditor({
           >
             <Copy className="w-4 h-4" /> Copy
           </Button>
-          {!draft.is_published && (
-            <Button
-              variant="outline"
-              className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
-            >
-              <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
-              AI Draft
-            </Button>
-          )}
+          {!draft.is_published &&
+            (!isPendindRegenerate ? (
+              <Button
+                onClick={() => handleRegenerateDraft(draft.id)}
+                variant="outline"
+                className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
+              >
+                <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                AI Draft
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
+              >
+                <StarIcon size={6} className="animate-spin" />
+                <StarIcon size={6} className="animate-spin" />
+                <StarIcon size={6} className="animate-spin" />
+              </Button>
+            ))}
         </div>
         <ModalApprovedDraft
           isPublished={draft.is_published}
@@ -81,6 +97,7 @@ export function DraftEditor({
           content={draft.content}
           typeContent={draft.typeContent}
           onApprove={onApprove}
+          isPending={isPending}
         />
       </div>
     </div>

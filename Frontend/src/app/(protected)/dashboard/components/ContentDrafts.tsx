@@ -8,7 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Mail, Linkedin, Twitter } from "lucide-react";
+import { Linkedin, Mail, Twitter, Users } from "lucide-react";
 import { toast } from "sonner";
 import { ChannelTabs } from "./ChannelTabs";
 import { DraftEditor } from "./DraftEditor";
@@ -17,20 +17,22 @@ import { DraftI } from "@/interfaces";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ContentDraftService,
-  IsPublishedDraftService,
+  RegenerateDraft,
 } from "@/services/contentdraft.service";
 import { DraftEditorSkeleton } from "@/components/skeletons/DraftEditorSkeleton";
-import { useRouter } from "next/navigation";
+import { useDraftStore } from "@/store/contentdraft.store";
+import { PublishDraftService } from "@/services/publish.service";
 
 const CHANNELS = [
   { id: "newsletter", name: "Newsletter", icon: Mail, color: "text-blue-500" },
+  { id: "bluesky", name: "Bluesky", icon: Users, color: "text-sky-400" },
   { id: "twitter", name: "Twitter (X)", icon: Twitter, color: "text-sky-400" },
-  { id: "reddit", name: "reddit", icon: Linkedin, color: "text-blue-700" },
 ];
 
 export function ContentDrafts() {
+  const { drafts, setDrafts, updatedDraftContent, publishDraft } = useDraftStore();
   const [activeChannel, setActiveChannel] = useState("newsletter");
-  const [drafts, setDrafts] = useState<Array<DraftI>>();
+
   const { data, isLoading } = useQuery({
     queryKey: ["contentdraft"],
     queryFn: ContentDraftService,
@@ -45,37 +47,61 @@ export function ContentDrafts() {
   );
 
   const handleChange = (value: string) => {
-    setDrafts((prev) =>
-      prev?.map((draft) =>
-        draft.typeContent === activeChannel
-          ? { ...draft, content: value }
-          : draft,
-      ),
-    );
+    updatedDraftContent(activeChannel, value);
   };
 
   const query = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: IsPublishedDraftService,
+    mutationFn: PublishDraftService,
     onError: (error) => {
       toast.error(error.message);
     },
     onSuccess: (data) => {
+      if (data?.id && data?.content) {
+        publishDraft(data.id, data.content);
+      }
       query.invalidateQueries({
         queryKey: ["contentdraft"],
       });
-      toast.success(data?.message);
+
+      toast.success(data?.message || "Publicado ✅");
     },
   });
+
+  const { mutate: mutateRegenerate, isPending: isPendindRegenerate } =
+    useMutation({
+      mutationFn: RegenerateDraft,
+      onError: (error) => {
+        toast.error(error.message);
+      },
+      onSuccess: (data) => {
+        query.invalidateQueries({
+          queryKey: ["contentdraft"],
+        });
+        toast.success(data?.message);
+      },
+    });
 
   const handleApprove = (
     id: string,
     isPublished: boolean,
     content: string,
-    type: string,
+    typeContent: string,
   ) => {
-    mutate({ id, isPublished, content, type });
+    mutate({
+      id,
+      content,
+      typeContent: typeContent as
+        | "bluesky"
+        | "twitter"
+        | "reddit"
+        | "newsletter",
+    });
+  };
+
+  const handleRegenerateDraft = (id: string) => {
+    mutateRegenerate({ id });
   };
 
   return (
@@ -108,6 +134,9 @@ export function ContentDrafts() {
             channels={CHANNELS}
             onChange={handleChange}
             onApprove={handleApprove}
+            isPending={currentDraft.is_published || isPendindRegenerate}
+            handleRegenerateDraft={handleRegenerateDraft}
+            isPendindRegenerate={isPendindRegenerate}
           />
         )}
       </CardContent>
