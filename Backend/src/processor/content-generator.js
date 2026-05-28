@@ -62,9 +62,9 @@ async function generateContent(messages, apiKey) {
     if (!response) {
         console.log("Error al generar después de 3 intentos:", lastError);
         return {
-            newsletter: "Error al generar el newsletter",
-            twitter: "Error al generar el tweet",
-            bluesky: "Error al generar el bluesky"
+            newsletter: "Error generating newsletter",
+            twitter: "Error generating tweet",
+            bluesky: "Error generating bluesky"
         };
     };
 

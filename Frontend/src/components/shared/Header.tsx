@@ -13,7 +13,8 @@ import { Separator } from "../ui/separator";
 import { LogoutButton } from "./LogoutButton";
 
 export default async function Header() {
-  const { user } = await ProfileService();
+  const profile = await ProfileService().catch(() => null);
+  const user = profile?.user;
 
   return (
     <header className="border-b bg-card px-6 md:px-12 py-5 md:py-8 flex flex-col md:flex-row items-center justify-between sticky top-0 z-30 gap-6">
