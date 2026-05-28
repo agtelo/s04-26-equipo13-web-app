@@ -38,7 +38,7 @@ export default async function NewPasswordPage({ searchParams }: Props) {
             Back to Sign In
           </Link>
         </div>
-        <p className="mt-8 text-[10px] text-muted-foreground leading-relaxed max-w-[240px] mx-auto uppercase tracking-tighter text-center">
+        <p className="mt-8 text-[10px] text-muted-foreground leading-relaxed max-w-60 mx-auto uppercase tracking-tighter text-center">
           Authorized access only. By continuing, you agree to our terms of
           processing.
         </p>
