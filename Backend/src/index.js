@@ -73,8 +73,8 @@ async function main() {
     // Paso 3: Mostrar los resultados
     console.log("\n=== NEWSLETTER ===");
     console.log(drafts.newsletter);
-    console.log("\n=== REDDIT ===");
-    console.log(drafts.reddit);
+    console.log("\n=== BLUESKY ===");
+    console.log(drafts.bluesky);
     console.log("\n=== TWITTER ===");
     console.log(drafts.twitter);
 }
@@ -102,7 +102,7 @@ async function startServer() {
 startServer();
 
 // Paso 4: utilizamos cron para contar los dias de la semana y verificamos q sea correcto, para enviar el informe semanal
-cron.schedule("09 9 * * 2", async () => {
+cron.schedule("27 10 * * 4", async () => {
     // 0-> minutos, 9-> hora, *-> valores nulos, 5-> dia de la semana en este caso viernes (0 = domingo, ..., 5 = viernes)
 
     try{

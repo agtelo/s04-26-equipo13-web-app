@@ -32,14 +32,46 @@ async function generateContent(messages, apiKey) {
     Solo respondé con el JSON, sin texto adicional.
     `;
 
-    // 4. Enviar al LLM y obtener respuesta
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
+    // 4. Enviamos al LLM con reintentos
+    let response;
+    let lastError;
+
+    // Intentamos 3 veces en caso de error (timeouts, rate limits, etc)
+    for (let attempt = 1; attempt <= 3; attempt++) {
+
+        try {
+
+            const result = await model.generateContent(prompt); // enviamos el prompt al modelo para generar el contenido
+            response = result.response.text(); // obtenemos la respuesta como texto
+
+            break; // salir del loop si funcionó
+
+        } catch (error) {
+
+            lastError = error; // guardamos el error para mostrarlo si los 3 intentos fallan
+
+            if (attempt < 3) {
+
+                console.log(`Intento ${attempt} fallido, reintentando en 5 segundos...`);
+
+                await new Promise(resolve => setTimeout(resolve, 5000)); // esperamos 5 segundos antes de reintentar
+            }
+        };
+    };
+
+    if (!response) {
+        console.log("Error al generar después de 3 intentos:", lastError);
+        return {
+            newsletter: "Error al generar el newsletter",
+            twitter: "Error al generar el tweet",
+            bluesky: "Error al generar el bluesky"
+        };
+    };
 
     // 5. Parsear el JSON de la respuesta
     const clean = response.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
 
-    // 6. Lo q hacemos aca es crear la variable "drafts" y creamos un try-catch por si hay alguna falla 
+    // Lo q hacemos aca es crear la variable "drafts" y creamos un try-catch por si hay alguna falla 
     // devuelva un objeto con un msj de error y el sistema no se cae
     let drafts;
 
