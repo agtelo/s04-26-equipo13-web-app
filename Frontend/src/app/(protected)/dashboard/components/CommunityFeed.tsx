@@ -18,8 +18,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CommunityFeedService } from "@/services/communityfeed.service";
 import { GenerationDraftNew } from "@/services/contentdraft.service";
 import { toast } from "sonner";
-import { ActivityCardSkeleton } from "@/components/skeletons/ActivityCardSkeleton";
-import { Carrois_Gothic } from "next/font/google";
+import { ActivityCardSkeleton } from "@/components/shared/skeletons/ActivityCardSkeleton";
 
 export function CommunityFeed() {
   const { data, isLoading } = useQuery({

@@ -36,7 +36,7 @@ export const PublishDraftService = async (payload: PublishPayload) => {
         `${process.env.API_URL}/api/publish/newsletter`,
         {
           htmlContent: content,
-          to: `${process.env.TEST_EMAIL}`,
+          to: "alantelo1987@gmail.com",
           subject: "TalentCirle weekly report",
         },
         { headers },

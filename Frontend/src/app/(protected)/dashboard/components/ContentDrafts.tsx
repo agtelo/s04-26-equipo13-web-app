@@ -19,7 +19,7 @@ import {
   ContentDraftService,
   RegenerateDraft,
 } from "@/services/contentdraft.service";
-import { DraftEditorSkeleton } from "@/components/skeletons/DraftEditorSkeleton";
+import { DraftEditorSkeleton } from "@/components/shared/skeletons/DraftEditorSkeleton";
 import { useDraftStore } from "@/store/contentdraft.store";
 import { PublishDraftService } from "@/services/publish.service";
 
