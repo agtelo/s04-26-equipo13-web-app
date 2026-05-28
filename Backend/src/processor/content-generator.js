@@ -21,7 +21,7 @@ async function generateContent(messages, apiKey) {
 
     1. **NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)
     2. **TWITTER** (máximo 280 caracteres, directo y con hashtags)
-    3. **BLUESKY** (formato medio, 1-2 parrafos, tono conversacional)
+    3. **BLUESKY** (máximo 250 caracteres, directo y con hashtags)
 
     Respondé en formato JSON con esta estructura:
     {
@@ -64,7 +64,7 @@ async function generateContent(messages, apiKey) {
 const TYPE_PROMPTS = {
     newsletter: "**NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)",
     twitter: "**TWITTER** (máximo 280 caracteres, directo y con hashtags)",
-    bluesky: "**BLUESKY** (formato medio, 1-2 parrafos, tono conversacional)"
+    bluesky: "**BLUESKY** (máximo 250 caracteres, directo y con hashtags)"
 };
 
 async function regenerateContent(messages, apiKey, type) {

@@ -8,6 +8,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Logo } from "@/components/shared/Logo";
 import { RefreshCw, StarIcon } from "lucide-react";
 import { ActivityCard } from "./ActivityCard";
@@ -98,7 +99,8 @@ export function CommunityFeed() {
           <RefreshCw className="w-5 h-5" />
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8 scrollbar-thin">
+      <ScrollArea className="flex-1">
+  <CardContent className="flex-1 flex flex-col pt-0 px-8 pb-8 scrollbar-thin">
         {isLoading ? (
           <div className="space-y-6">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -134,6 +136,7 @@ export function CommunityFeed() {
             </Button>
           ))}
       </CardContent>
+      </ScrollArea>
     </Card>
   );
 }
