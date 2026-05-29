@@ -29,6 +29,10 @@ export default function RootLayout({
           position="top-center"
           toastOptions={{
             classNames: {
+              toast:
+                "!w-[320px] !max-w-[calc(100vw-2rem)] !justify-center !text-center",
+              title: "!w-full !text-center",
+              description: "!w-full !text-center",
               success:
                 "!bg-[#E8F5E9] !text-[#2E7D32] !border-[#C8E6C9] dark:!bg-[#102A16] dark:!text-[#A5D6A7] dark:!border-[#2E7D32]",
               error:
