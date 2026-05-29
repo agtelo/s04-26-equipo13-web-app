@@ -39,47 +39,6 @@ app.use("/drafts", draftRoutes);
 app.use("/api", regenerateRoutes);
 app.use("/community-feed", communityFeedRoutes);
 
-//Función principal que se ejecutará en el cron para realizar la generación semanal
-async function main() {
-
-    // Paso 0: Ver canales disponibles (NUEVO)
-    console.log("Buscando canales disponibles...");
-    try {
-
-        const availableChannels = await getAvailableChannels(TOKEN, GUILD_ID);
-        console.log("Canales encontrados:");
-
-        // Mostramos la lista linda en la consola
-        availableChannels.forEach(ch => {
-
-            console.log(`- ${ch.name} (ID: ${ch.id}) [Categoría: ${ch.category}]`);
-        });
-
-    } catch (error) {
-
-        console.error("Error al traer los canales:", error);
-    }
-
-    // Paso 1: Recolectar mensajes de Discord
-    console.log("Recolectando mensajes de Discord...");
-
-    //const messages = await collectMessages(TOKEN, GUILD_ID);
-    const messages = await collectMessagesFromAllChannels(TOKEN, GUILD_ID); //Si queremos recolectar de todos los canales en vez de uno específico
-    console.log(`Se recolectaron ${messages.length} mensajes`);
-
-    // Paso 2: Generar borradores con IA
-    console.log("Generando borradores con Gemini...");
-    const drafts = await generateContent(messages, GEMINI_KEY);
-
-    // Paso 3: Mostrar los resultados
-    console.log("\n=== NEWSLETTER ===");
-    console.log(drafts.newsletter);
-    console.log("\n=== BLUESKY ===");
-    console.log(drafts.bluesky);
-    console.log("\n=== TWITTER ===");
-    console.log(drafts.twitter);
-}
-
 //Iniciamos el servidor y sincronizamos la base de datos
 async function startServer() {
 
