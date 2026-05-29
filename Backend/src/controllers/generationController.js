@@ -5,11 +5,6 @@ const communityFeedSchema = require('../models/communityFeedmodel');
 const { runGeneration } = require('../services/generationService');
 const { collectMessagesFromAllChannels } = require('../collector/discord-collector');
 
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
-//const CHANNEL_ID = process.env.DISCORD_GUILD_ID;
-const GUILD_ID = process.env.DISCORD_GUILD_ID;
-const GEMINI_KEY = process.env.GEMINI_API;
-
 const triggerGeneration = async (req, res) => {
 
     try {
