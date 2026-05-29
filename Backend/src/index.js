@@ -7,6 +7,7 @@ const cron = require("node-cron");
 const cors = require("cors");
 const { collectMessages, getAvailableChannels, collectMessagesFromAllChannels } = require("./collector/discord-collector");
 const { generateContent } = require("./processor/content-generator");
+const { runGeneration } = require('./services/generationService');
 
 //Importamos las rutas y el modelo de la base de datos
 const userRoutes = require("./routes/userRoutes");
@@ -102,15 +103,14 @@ async function startServer() {
 startServer();
 
 // Paso 4: utilizamos cron para contar los dias de la semana y verificamos q sea correcto, para enviar el informe semanal
-cron.schedule("14 16 * * 4", async () => {
+cron.schedule("0 16 * * 5", async () => {
     // 0-> minutos, 9-> hora, *-> valores nulos, 5-> dia de la semana en este caso viernes (0 = domingo, ..., 5 = viernes)
 
-    try{
-
-        await main();
+    try {
+        await runGeneration();
 
     } catch (error) {
 
-        console.error("Error en el cron: ", error);
+        console.error("Error en el cron:", error);
     }
 });
