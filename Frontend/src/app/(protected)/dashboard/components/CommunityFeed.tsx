@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { ActivityCardSkeleton } from "@/components/shared/skeletons/ActivityCardSkeleton";
 
 export function CommunityFeed() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["communityfeed"],
     queryFn: CommunityFeedService,
   });
@@ -36,11 +36,16 @@ export function CommunityFeed() {
     },
     onSuccess: (data) => {
       query.invalidateQueries({
+        queryKey: ["communityfeed"],
+      });
+      query.invalidateQueries({
         queryKey: ["contentdraft"],
       });
       toast.success(data?.message);
     },
   });
+
+  const isRefreshing = isPending || isFetching;
 
   const handleAIGenerate = () => mutate();
 
@@ -59,9 +64,13 @@ export function CommunityFeed() {
           <Button
             variant="ghost"
             size="icon"
+            onClick={handleAIGenerate}
+            disabled={isRefreshing}
             className="rounded-full hover:bg-primary/10 text-primary"
           >
-            <RefreshCw className="w-5 h-5" />
+            <RefreshCw
+              className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
+            />
           </Button>
         </CardHeader>
         <ScrollArea className="min-h-0 flex-1">
