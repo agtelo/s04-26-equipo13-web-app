@@ -41,8 +41,13 @@ export default function FormRegister() {
       toast.error(error.message);
       return;
     },
-    onSuccess: (values) => {
-      toast.success(values);
+    onSuccess: (data) => {
+      if (!data.ok) {
+        toast.error(data.message);
+        return;
+      }
+
+      toast.success(data.message);
       router.push("/login");
     },
   });
