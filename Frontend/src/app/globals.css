@@ -96,3 +96,29 @@
 
 
 
+
+/* Sonner Toast Styles */
+.toaster {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  padding: 1rem;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.toaster .toast {
+  pointer-events: auto;
+}
+
+/* Center toasts for all screen sizes */
+@media (max-width: 640px) {
+  .toaster {
+    max-width: calc(100% - 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

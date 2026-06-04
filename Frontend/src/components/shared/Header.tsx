@@ -1,7 +1,9 @@
+// components/shared/Header.tsx
+
 import { Logo } from "./Logo";
 import { buttonVariants } from "../ui/button";
-
 import { ModeToggle } from "./ModeToggle";
+import { HistoryButton } from "./HistoryButton";
 import { cn } from "@/lib/utils";
 import { ProfileService } from "@/services";
 import {
@@ -31,6 +33,9 @@ export default async function Header() {
       </div>
 
       <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+       
+        {/* History Button aparece solo si hay drafts aprobados */}
+        {user && <HistoryButton />}
         <ModeToggle />
         {user && (
           <DropdownMenu>
