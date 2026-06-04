@@ -4,6 +4,9 @@ import { Activity, CommunityFeedResponse } from "@/interfaces/activity.interface
 import axios, { isAxiosError } from "axios";
 import { cookies } from "next/headers";
 
+/**
+ * Fetch community feed messages from backend
+ */
 export const CommunityFeedService = async (): Promise<Activity[]> => {
   const cookieStore = await cookies();
   
@@ -16,7 +19,7 @@ export const CommunityFeedService = async (): Promise<Activity[]> => {
         },
       },
     );
-    console.log("Backend response:", res.data);
+    
     const activities: Activity[] = res.data.map((item, index) => ({
       id: `${index}`,
       author: item.user_name,
@@ -41,7 +44,8 @@ export const CommunityFeedService = async (): Promise<Activity[]> => {
 };
 
 /**
- * Nuevo servicio: Colectar mensajes manualmente (cuando hace click en Refresh)
+ * Trigger message collection manually
+ * Called when user clicks Refresh button
  */
 export const TriggerCollectionService = async () => {
   const cookieStore = await cookies();

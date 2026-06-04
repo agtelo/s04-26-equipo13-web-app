@@ -29,7 +29,7 @@ export function CommunityFeed() {
 
   const query = useQueryClient();
 
-  // Mutation para generar drafts
+  // Mutation to generate drafts
   const { mutate: generateDrafts, isPending: isGenerating } = useMutation({
     mutationFn: GenerationDraftNew,
     onError: (error) => {
@@ -39,32 +39,32 @@ export function CommunityFeed() {
       query.invalidateQueries({
         queryKey: ["contentdraft"],
       });
-      toast.success(data?.message || "Drafts generados ✅");
+      toast.success(data?.message || "Drafts generated successfully");
     },
   });
 
-  // Mutation para colectar mensajes
+  // Mutation to collect messages
   const { mutate: collectMessages, isPending: isCollecting } = useMutation({
     mutationFn: TriggerCollectionService,
     onError: (error) => {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      // Refetch del community feed después de colectar
+      // Refetch community feed after collection
       refetch();
-      toast.success(`${data.messageCount} mensajes colectados ✅`);
+      toast.success(`${data.messageCount} messages collected successfully`);
     },
   });
 
-  // Función para refrescar: colectar mensajes nuevos de Discord
+  // Handle refresh: collect new messages from Discord
   const handleRefresh = () => {
     collectMessages();
   };
 
-  // Función para generar drafts de IA con los mensajes colectados
+  // Handle generate: create AI drafts with collected messages
   const handleAIGenerate = () => {
     if (activities.length === 0) {
-      toast.error("No hay mensajes. Colecta primero haciendo click en Refresh");
+      toast.error("No messages available. Click Refresh to collect messages first");
       return;
     }
     generateDrafts();
@@ -91,7 +91,7 @@ export function CommunityFeed() {
             onClick={handleRefresh}
             disabled={isRefreshing}
             className="rounded-full hover:bg-primary/10 text-primary"
-            title="Colectar mensajes de Discord"
+            title="Collect messages from Discord"
           >
             <RefreshCw
               className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
@@ -125,7 +125,7 @@ export function CommunityFeed() {
               className="w-full py-8 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all gap-3"
             >
               <Logo className="animate-spin" />
-              {isCollecting ? "Colectando..." : "Generando..."}
+              {isCollecting ? "Collecting..." : "Generating..."}
             </Button>
           ) : (
             <Button
