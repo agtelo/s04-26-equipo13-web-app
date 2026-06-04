@@ -15,13 +15,22 @@ export default function HistoryPage() {
     toast.error("Failed to load approved drafts");
   }
 
-  // Group drafts by week with proper typing
+  // Group drafts by week with month
   const groupedByWeek: Record<string, ApprovedDraft[]> = drafts.reduce(
     (acc: Record<string, ApprovedDraft[]>, draft: ApprovedDraft) => {
       const date = new Date(draft.createdAt);
+      
+      // Obtener número de semana
       const weekStart = new Date(date);
       weekStart.setDate(date.getDate() - date.getDay());
-      const weekKey = `Week ${Math.ceil(date.getDate() / 7)}, ${date.getFullYear()}`;
+      const weekNumber = Math.ceil(date.getDate() / 7);
+      
+      // Obtener nombre del mes
+      const monthName = date.toLocaleDateString("en-US", { month: "long" });
+      const year = date.getFullYear();
+      
+      // Crear key con semana, mes y año
+      const weekKey = `Week ${weekNumber}, ${monthName} ${year}`;
       
       if (!acc[weekKey]) {
         acc[weekKey] = [];
