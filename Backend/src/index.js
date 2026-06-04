@@ -1,75 +1,105 @@
-//Archivo principal del backend, encargado de iniciar el servidor, configurar las rutas y programar la tarea de generación semanal
+// Main backend file - Initializes server, configures routes, and schedules weekly tasks
 require("dotenv").config();
 
-//Importamos las funciones necesarias para la recolección de mensajes y generación de contenido
 const express = require("express");
 const cron = require("node-cron");
 const cors = require("cors");
-const { collectMessages, getAvailableChannels, collectMessagesFromAllChannels } = require("./collector/discord-collector");
-const { generateContent } = require("./processor/content-generator");
-const { runGeneration } = require('./services/generationService');
 
-//Importamos las rutas y el modelo de la base de datos
+// Import services
+const { collectAndSaveMessages } = require('./services/collectionService');
+const { generateDraftsFromExisting } = require('./services/generationService');
+
+// Import routes
 const userRoutes = require("./routes/userRoutes");
 const regenerateRoutes = require("./routes/regenerateRoutes");
 const publishRoutes = require("./routes/publishRoutes");
 const draftRoutes = require("./routes/draftRoutes");
 const generationRoutes = require("./routes/generationRoutes");
 const communityFeedRoutes = require("./routes/communityFeedRoutes");
+const collectionRoutes = require("./routes/collectionRoutes");
+
+// Import database
 const sequelize = require("./config/database");
 
-//Variables de entorno
-const TOKEN = process.env.DISCORD_TOKEN; //el bot
-const GUILD_ID = process.env.DISCORD_GUILD_ID; //id del server
-const GEMINI_KEY = process.env.GEMINI_API;
+// Environment variables
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+const GUILD_ID = process.env.DISCORD_GUILD_ID;
 
-//Creamos la aplicación de Express
+// Create Express app
 const app = express();
 
-//Configuramos los middlewares y las rutas
+// Configure middlewares
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
-//Rutas
+// Register routes
 app.use("/user", userRoutes);
-app.use("/api",publishRoutes);
+app.use("/api", publishRoutes);
 app.use("/generation", generationRoutes);
 app.use("/drafts", draftRoutes);
 app.use("/api", regenerateRoutes);
 app.use("/community-feed", communityFeedRoutes);
+app.use("/collection", collectionRoutes);
 
-//Iniciamos el servidor y sincronizamos la base de datos
+// Start server
 async function startServer() {
-
-    try{
+    try {
         await sequelize.authenticate();
-        console.log("Conexion a la bd exitosa");
+        console.log("Successfully connected to database");
 
         await sequelize.sync();
-        console.log("Tablas sincronizadas");
+        console.log("Database tables synchronized");
 
         const PORT = process.env.PORT;
         app.listen(PORT, () => {
-            console.log(`Servidor corriendo en el ${PORT}`);
+            console.log(`Server running on port ${PORT}`);
         });
-        
-    }catch(error){
-        console.log("Error al conectar a la base de datos: ", error);
-    };
+
+    } catch (error) {
+        console.log("Error connecting to database:", error);
+    }
 }
 
 startServer();
 
-// Paso 4: utilizamos cron para contar los dias de la semana y verificamos q sea correcto, para enviar el informe semanal
+// ============================================
+// CRON JOB: Collect messages every Friday
+// ============================================
+// Syntax: "minutes hours day month day_of_week"
+// 0 16 * * 5 = Friday at 16:00
 cron.schedule("0 16 * * 5", async () => {
-    // 0-> minutos, 9-> hora, *-> valores nulos, 5-> dia de la semana en este caso viernes (0 = domingo, ..., 5 = viernes)
+    console.log("\n========== Scheduled Task: Message Collection ==========");
+    console.log("Time: Friday at 16:00");
+    console.log("=====================================================\n");
 
     try {
-        await runGeneration();
+        await collectAndSaveMessages();
+        console.log("Message collection completed\n");
 
     } catch (error) {
-
-        console.error("Error en el cron:", error);
+        console.error("Error in collection cron job:", error.message);
     }
 });
+
+// ============================================
+// CRON JOB: Generate drafts every Friday
+// ============================================
+// 30 minutes after collection
+cron.schedule("30 16 * * 5", async () => {
+    console.log("\n========== Scheduled Task: Draft Generation ==========");
+    console.log("Time: Friday at 16:30 (30 minutes after collection)");
+    console.log("=====================================================\n");
+
+    try {
+        await generateDraftsFromExisting();
+        console.log("Draft generation completed\n");
+
+    } catch (error) {
+        console.error("Error in generation cron job:", error.message);
+    }
+});
+
+console.log("\nScheduled tasks configured:");
+console.log("  Friday 16:00 - Collect messages from Discord");
+console.log("  Friday 16:30 - Generate drafts with Gemini\n");
