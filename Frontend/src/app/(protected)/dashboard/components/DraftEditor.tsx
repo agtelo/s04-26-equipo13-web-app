@@ -88,7 +88,7 @@ export function DraftEditor({
                 className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
               >
                 <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform animate-pulse" />
-                Regeneration Draft
+                Drafting...
               </Button>
             ))}
         </div>
