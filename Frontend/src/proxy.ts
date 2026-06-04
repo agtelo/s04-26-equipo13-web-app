@@ -13,11 +13,11 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/editor")) {
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/history") || pathname.startsWith("/editor")) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-  }
+}
 
   if ((pathname === "/login" || pathname === "/register") && token) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
@@ -32,6 +32,7 @@ export const config = {
     "/dashboard/:path*",
     "/editor/:path*",
     "/login",
+    "/history/:path*",
     "/register",
   ],
 };
