@@ -4,7 +4,7 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get("token");
   const { pathname } = request.nextUrl;
 
-  // Redirige la raíz según si tiene token o no
+  // Redirect root based on authentication
   if (pathname === "/") {
     if (token) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
@@ -13,12 +13,14 @@ export function proxy(request: NextRequest) {
     }
   }
 
+  // Protect dashboard, history, and editor routes
   if (pathname.startsWith("/dashboard") || pathname.startsWith("/history") || pathname.startsWith("/editor")) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-}
+  }
 
+  // Redirect authenticated users away from auth pages
   if ((pathname === "/login" || pathname === "/register") && token) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
@@ -30,9 +32,11 @@ export const config = {
   matcher: [
     "/",                 
     "/dashboard/:path*",
+    "/history/:path*",
     "/editor/:path*",
     "/login",
-    "/history/:path*",
     "/register",
+    "/forgot-password/:path*",
+    "/new-password/:path*",
   ],
 };
