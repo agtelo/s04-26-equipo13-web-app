@@ -15,13 +15,13 @@ import { RefreshCw } from "lucide-react";
 import { ActivityCard } from "./ActivityCard";
 import ActivityCardEmpty from "./ActivityCardEmpty";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CommunityFeedService } from "@/services/communityfeed.service";
+import { CommunityFeedService, TriggerCollectionService } from "@/services/communityfeed.service";
 import { GenerationDraftNew } from "@/services/contentdraft.service";
 import { toast } from "sonner";
 import { ActivityCardSkeleton } from "@/components/shared/skeletons/ActivityCardSkeleton";
 
 export function CommunityFeed() {
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ["communityfeed"],
     queryFn: CommunityFeedService,
   });
@@ -29,7 +29,8 @@ export function CommunityFeed() {
 
   const query = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
+  // Mutation para generar drafts
+  const { mutate: generateDrafts, isPending: isGenerating } = useMutation({
     mutationFn: GenerationDraftNew,
     onError: (error) => {
       toast.error(error.message);
@@ -38,19 +39,39 @@ export function CommunityFeed() {
       query.invalidateQueries({
         queryKey: ["contentdraft"],
       });
-      toast.success(data?.message);
+      toast.success(data?.message || "Drafts generados ✅");
     },
   });
 
-  // Función para refrescar solo el feed
+  // Mutation para colectar mensajes
+  const { mutate: collectMessages, isPending: isCollecting } = useMutation({
+    mutationFn: TriggerCollectionService,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      // Refetch del community feed después de colectar
+      refetch();
+      toast.success(`${data.messageCount} mensajes colectados ✅`);
+    },
+  });
+
+  // Función para refrescar: colectar mensajes nuevos de Discord
   const handleRefresh = () => {
-    query.invalidateQueries({
-      queryKey: ["communityfeed"],
-    });
+    collectMessages();
   };
 
-  // Función para generar drafts de IA
-  const handleAIGenerate = () => mutate();
+  // Función para generar drafts de IA con los mensajes colectados
+  const handleAIGenerate = () => {
+    if (activities.length === 0) {
+      toast.error("No hay mensajes. Colecta primero haciendo click en Refresh");
+      return;
+    }
+    generateDrafts();
+  };
+
+  const isRefreshing = isCollecting || isFetching;
+  const isLoading_ = isGenerating || isCollecting;
 
   return (
     <div className="p-1.78 flex flex-col gap-6">
@@ -68,11 +89,12 @@ export function CommunityFeed() {
             variant="ghost"
             size="icon"
             onClick={handleRefresh}
-            disabled={isFetching}
+            disabled={isRefreshing}
             className="rounded-full hover:bg-primary/10 text-primary"
+            title="Colectar mensajes de Discord"
           >
             <RefreshCw
-              className={`w-5 h-5 ${isFetching ? "animate-spin" : ""}`}
+              className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
             />
           </Button>
         </CardHeader>
@@ -97,14 +119,13 @@ export function CommunityFeed() {
         </ScrollArea>
         <CardFooter className=" bg-card flex border-none items-center justify-end pt-0 px-8 pb-8">
           {activities.length > 0 &&
-          (isPending ? (
+          (isLoading_ ? (
             <Button
               disabled
-              onClick={handleAIGenerate}
               className="w-full py-8 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all gap-3"
             >
               <Logo className="animate-spin" />
-              Generating draft
+              {isCollecting ? "Colectando..." : "Generando..."}
             </Button>
           ) : (
             <Button
