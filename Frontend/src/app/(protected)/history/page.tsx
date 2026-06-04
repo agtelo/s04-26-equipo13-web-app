@@ -1,45 +1,47 @@
-'use client'
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { GetApprovedDraftsService, ApprovedDraft } from "@/services/history.service";
+import { HistoryTable } from "./component/HistoryTable";
+import { toast } from "sonner";
 
 export default function HistoryPage() {
-    return (
-        <main className="max-w-7xl mx-auto p-6 md:p-12">
+  const { data: drafts = [], isLoading, error } = useQuery({
+    queryKey: ["approved-drafts"],
+    queryFn: GetApprovedDraftsService,
+  });
 
-            <motion.div
-                key="history"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-10"
-            >
-                <div className="lg:col-span-12 space-y-10">
-                    <Card className="rounded-[40px] border-none shadow-sm min-h-[700px] overflow-hidden flex flex-col">
+  if (error) {
+    toast.error("Failed to load approved drafts");
+  }
 
-                        {/* CABECERA */}
-                        <CardHeader className="flex flex-row items-center justify-between pb-10 pt-10 px-10 border-b">
-                            <div>
-                                <CardTitle className="text-3xl md:text-4xl font-serif italic mb-2">History</CardTitle>
-                                <CardDescription className="text-sm font-medium opacity-70">Archive of approved drafts</CardDescription>
-                            </div>
-                            <Button asChild
-                                variant="outline"
-                                className="rounded-full px-8 h-12 uppercase font-black text-[10px] tracking-widest border-muted"
-                            >
-                                <Link href="/dashboard">  Back to Editor  </Link>
+  // Group drafts by week with proper typing
+  const groupedByWeek: Record<string, ApprovedDraft[]> = drafts.reduce(
+    (acc: Record<string, ApprovedDraft[]>, draft: ApprovedDraft) => {
+      const date = new Date(draft.createdAt);
+      const weekStart = new Date(date);
+      weekStart.setDate(date.getDate() - date.getDay());
+      const weekKey = `Week ${Math.ceil(date.getDate() / 7)}, ${date.getFullYear()}`;
+      
+      if (!acc[weekKey]) {
+        acc[weekKey] = [];
+      }
+      acc[weekKey].push(draft);
+      return acc;
+    },
+    {} as Record<string, ApprovedDraft[]>
+  );
 
-                            </Button>
-                        </CardHeader>
+  const sortedWeeks = Object.entries(groupedByWeek).sort((a, b) => 
+    b[0].localeCompare(a[0])
+  );
 
-                        {/* CONTENIDO PRINCIPAL */}
-
-                    </Card>
-                </div>
-            </motion.div>
-        </main>
-
-    )
+  return (
+    <main className="max-w-7xl mx-auto p-6 md:p-12">
+      <HistoryTable 
+        groupedDrafts={Object.fromEntries(sortedWeeks)} 
+        isLoading={isLoading}
+      />
+    </main>
+  );
 }

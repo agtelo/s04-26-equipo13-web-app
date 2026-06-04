@@ -1,6 +1,6 @@
-export * from "./Header";
-export * from "./Logo";
-export * from "./LogoutButton";
-export * from "./ModeToggle";
-export * from "./ModalApprovedDraft";
-
+export { default as Header } from "./Header";
+export { Logo } from "./Logo";
+export { LogoutButton } from "./LogoutButton";
+export { ModeToggle } from "./ModeToggle";
+export { HistoryButton } from "./HistoryButton";  // Agregar esto
+export { ModalApprovedDraft } from "./ModalApprovedDraft";
