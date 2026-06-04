@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { AnimatePresence, motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
@@ -208,19 +209,24 @@ function FieldError({
     )
   }, [children, errors])
 
-  if (!content) {
-    return null
-  }
-
   return (
-    <div
-      role="alert"
-      data-slot="field-error"
-      className={cn("text-sm font-normal text-destructive", className)}
-      {...props}
-    >
-      {content}
-    </div>
+    <AnimatePresence mode="wait">
+      {content && (
+        <motion.div
+          key="field-error"
+          role="alert"
+          data-slot="field-error"
+          className={cn("text-sm font-normal text-destructive", className)}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          {...props}
+        >
+          {content}
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 
