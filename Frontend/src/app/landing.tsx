@@ -58,19 +58,19 @@ export default function LandingPage() {
               {
                 number: "01",
                 title: "Connect your channels",
-                description: "Link your Discord server, Slack workspace, or internal feed. Distiller starts indexing posts, questions, and shared resources immediately.",
+                description: "Link your Discord server, Slack workspace, or internal feed. Distiller starts indexing posts, questions, and shared resources immediately — no manual tagging required.",
                 badge: "Discord · Slack · Internal"
               },
               {
                 number: "02",
                 title: "Generate a draft",
-                description: "Hit \"Generate AI Drafts.\" The model reads the week's activity, selects the highest-signal moments, and writes a newsletter in your community's voice.",
+                description: "Hit \"Generate AI Drafts.\" The model reads the week's activity, selects the highest-signal moments, and writes a newsletter in your community's voice — summaries, highlights, and discussion threads, all attributed.",
                 badge: "LLM · Weekly cadence"
               },
               {
                 number: "03",
                 title: "Approve & publish",
-                description: "Read, edit, and approve in the Content Drafts panel. One click sends it to your subscriber list and records metrics.",
+                description: "Read, edit, and approve in the Content Drafts panel. One click sends it to your subscriber list and records open rates and delivery metrics back into your feed.",
                 badge: "Review · Send · Measure"
               }
             ].map((step, i) => (
