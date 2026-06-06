@@ -17,17 +17,21 @@ async function generateContent(messages, apiKey) {
 
     ${messagesText}
 
-    Generá 3 borradores de contenido basados en esta actividad:
+    Generá 5 borradores de contenido basados en esta actividad:
 
     1. **NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)
     2. **TWITTER** (máximo 280 caracteres, directo y con hashtags)
     3. **BLUESKY** (máximo 250 caracteres, directo y con hashtags)
+    4. **LINKEDIN** (máximo 300 caracteres, tono formal y profesional)
+    5. **REDDIT** (máximo 200 caracteres, tono casual pero informativo)
 
     Respondé en formato JSON con esta estructura:
     {
         "newsletter": "...",
         "twitter": "...",
-        "bluesky": "..."
+        "bluesky": "...",
+        "linkedin": "...",
+        "reddit": "..."
     }
     Solo respondé con el JSON, sin texto adicional.
     `;
@@ -64,7 +68,9 @@ async function generateContent(messages, apiKey) {
         return {
             newsletter: "Error generating newsletter",
             twitter: "Error generating tweet",
-            bluesky: "Error generating bluesky"
+            bluesky: "Error generating bluesky",
+            linkedin: "Error generating linkedin",
+            reddit: "Error generating reddit"
         };
     };
 
@@ -86,7 +92,9 @@ async function generateContent(messages, apiKey) {
         drafts = {
             newsletter: "Error al generar el newsletter",
             twitter: "Error al generar el tweet",
-            bluesky: "Error al generar el bluesky"
+            bluesky: "Error al generar el bluesky",
+            linkedin: "Error al generar el linkedin",
+            reddit: "Error al generar el reddit"
         };
     }
 
@@ -96,7 +104,9 @@ async function generateContent(messages, apiKey) {
 const TYPE_PROMPTS = {
     newsletter: "**NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)",
     twitter: "**TWITTER** (máximo 280 caracteres, directo y con hashtags)",
-    bluesky: "**BLUESKY** (máximo 250 caracteres, directo y con hashtags)"
+    bluesky: "**BLUESKY** (máximo 250 caracteres, directo y con hashtags)",
+    linkedin: "**LINKEDIN** (máximo 300 caracteres, tono formal y profesional)",
+    reddit: "**REDDIT** (máximo 200 caracteres, tono casual pero informativo)"
 };
 
 async function regenerateContent(messages, apiKey, type) {

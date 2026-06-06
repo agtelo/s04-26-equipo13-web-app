@@ -43,7 +43,7 @@ const generateDraftsFromExisting = async () => {
         // 4. Save drafts (replace previous ones)
         await contentDraftSchema.destroy({ truncate: true });
 
-        const draftTypes = ['newsletter', 'twitter', 'bluesky'];
+        const draftTypes = ['newsletter', 'twitter', 'bluesky', 'linkedin', 'reddit'];
 
         for (const type of draftTypes) {
             await contentDraftSchema.create({

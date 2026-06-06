@@ -2,6 +2,7 @@ const { publishTweet } = require("../publisher/twitter-publisher");
 const { publishPost } = require("../publisher/reddit-publisher");
 const { Bluesky } = require("../publisher/bluesky-publisher");
 const { publishEmail } = require("../publisher/email-publisher");
+const { publishLinkedIn } = require("../publisher/linkedin-publisher");
 
 const publishTwitter = async (req, res) => {
 
@@ -80,4 +81,23 @@ const publishNewsletter = async (req, res) => {
     }
 };
 
-module.exports = { publishTwitter, publishReddit, publishBluesky, publishNewsletter };
+const publishLinkedInPost = async (req, res) => {
+
+    const { content } = req.body;
+
+    if(!content){
+        return res.status(400).json({ message: "The content is required" });
+    }
+
+    try{
+        const result = await publishLinkedIn(content);
+
+        return res.status(200).json({ success: true, ...result });
+
+    } catch(error){
+
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = { publishTwitter, publishReddit, publishBluesky, publishNewsletter, publishLinkedInPost };

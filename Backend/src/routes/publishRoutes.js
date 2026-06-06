@@ -7,5 +7,6 @@ router.post("/publish/twitter", authMiddleware, publishController.publishTwitter
 router.post("/publish/reddit", authMiddleware, publishController.publishReddit);
 router.post("/publish/bluesky", authMiddleware, publishController.publishBluesky);
 router.post("/publish/newsletter", authMiddleware, publishController.publishNewsletter);
+router.post("/publish/linkedin", authMiddleware, publishController.publishLinkedInPost);
 
 module.exports = router;
