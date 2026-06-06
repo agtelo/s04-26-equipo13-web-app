@@ -26,7 +26,7 @@ export default function LandingHeader() {
           How it works
         </a>
         <ModeToggle />
-        <Button asChild variant="outline" size="sm">
+        <Button asChild variant="outline" size="sm" className="uppercase font-bold">
           <Link href="/login">Sign in</Link>
         </Button>
       </div>

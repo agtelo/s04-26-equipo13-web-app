@@ -35,10 +35,10 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="uppercase font-bold">
               <Link href="/register">Get started</Link>
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" className="uppercase font-bold">
               Watch demo
             </Button>
           </div>
@@ -149,10 +149,10 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="uppercase font-bold">
               <Link href="/register">Get started free</Link>
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" className="uppercase font-bold">
               Schedule demo
             </Button>
           </div>
