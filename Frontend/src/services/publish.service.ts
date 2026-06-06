@@ -3,6 +3,7 @@
 import axios, { isAxiosError } from "axios";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { ProfileService } from "./profile.service";
 
 interface PublishPayload {
   id: string | number;
@@ -22,7 +23,6 @@ export const PublishDraftService = async (payload: PublishPayload) => {
   try {
     let publishResult;
 
-    // Publicar en la plataforma correspondiente
     if (typeContent === "bluesky") {
       const { data } = await axios.post(
         `${process.env.API_URL}/api/publish/bluesky`,
@@ -31,22 +31,37 @@ export const PublishDraftService = async (payload: PublishPayload) => {
       );
       publishResult = data;
     } else if (typeContent === "newsletter") {
-      // TODO: Implementar newsletter con Resend
+      const profile = await ProfileService();
+      const recipientEmail = profile?.user?.email;
+
+      if (!recipientEmail) throw new Error("Could not retrieve user email");
+
       const { data } = await axios.post(
         `${process.env.API_URL}/api/publish/newsletter`,
         {
           htmlContent: content,
-          to: "alantelo1987@gmail.com",
-          subject: "TalentCirle weekly report",
+          to: recipientEmail,
+          subject: "TalentCircle weekly report",
         },
         { headers },
       );
       publishResult = data;
+    } else if (typeContent === "twitter") {
+      const { data } = await axios.post(
+        `${process.env.API_URL}/api/publish/twitter`,
+        { content },
+        { headers },
+      );
+      publishResult = data;
     } else if (typeContent === "reddit") {
-      // TODO: Implementar blog con Reddit
+      const { data } = await axios.post(
+        `${process.env.API_URL}/api/publish/reddit`,
+        { content },
+        { headers },
+      );
+      publishResult = data;
     }
 
-    // Marcar draft como aprobado en el backend
     await axios.put(
       `${process.env.API_URL}/drafts/${id}`,
       { is_published: true, content },
@@ -59,7 +74,7 @@ export const PublishDraftService = async (payload: PublishPayload) => {
       success: true,
       id: String(id),
       content,
-      message: `Draft published in ${typeContent} `,
+      message: `Draft published in ${typeContent}`,
       publishResult,
     };
   } catch (error) {

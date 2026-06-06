@@ -14,55 +14,19 @@ export const ContentDraftService = async () => {
       },
     });
 
-    const formatedDraft = res.data.map((draft) => {
-      return {
-        id: draft.id,
-        typeContent: draft.typeContent,
-        content: draft.content,
-        is_published: draft.is_published,
-      };
-    });
+    const formatedDraft = res.data.map((draft) => ({
+      id: draft.id,
+      typeContent: draft.typeContent,
+      content: draft.content,
+      is_published: draft.is_published,
+    }));
 
     revalidatePath("/dashboard");
 
     return formatedDraft;
   } catch (error) {
-    console.log(error);
     if (error && isAxiosError(error)) {
       throw new Error(error.message);
-    }
-  }
-};
-
-export const IsPublishedDraftService = async ({
-  id,
-  content,
-}: {
-  id: string;
-  isPublished: boolean;
-  content: string;
-  type: string;
-}) => {
-  const cookieStore = await cookies();
-  try {
-    const res = await axios.put(
-      `${process.env.API_URL}/drafts/${id}`,
-      { is_published: true, content },
-      {
-        headers: {
-          Authorization: `Bearer ${cookieStore.get("token")?.value}`,
-        },
-      },
-    );
-    revalidatePath("/dashboard");
-
-    return {
-      message: res.data.message,
-    };
-  } catch (error) {
-    console.log(error);
-    if (error && isAxiosError(error)) {
-      throw new Error(error.response?.data.message);
     }
   }
 };
@@ -75,7 +39,7 @@ export const GenerationDraftNew = async () => {
       {},
       {
         headers: {
-          Authorization: `Bearer ${cookieStore.get("token")?.value} `,
+          Authorization: `Bearer ${cookieStore.get("token")?.value}`,
         },
       },
     );
@@ -84,18 +48,13 @@ export const GenerationDraftNew = async () => {
       message: "Draft Generate",
     };
   } catch (error) {
-    console.log(error);
     if (error && isAxiosError(error)) {
       throw new Error(error.response?.data.message);
     }
   }
 };
 
-interface RegeranteDraftProps {
-  id: string;
-}
-
-export const RegenerateDraft = async ({ id }: RegeranteDraftProps) => {
+export const RegenerateDraft = async ({ id }: { id: string }) => {
   const cookieStore = await cookies();
 
   try {
@@ -113,7 +72,6 @@ export const RegenerateDraft = async ({ id }: RegeranteDraftProps) => {
       message: data.message,
     };
   } catch (error) {
-    console.log(error);
     if (error && isAxiosError(error)) {
       throw new Error(error.response?.data.message);
     }

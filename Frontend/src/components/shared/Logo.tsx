@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Logo: React.FC<{ className?: string }> = ({ className }) => (
+export const Logo: React.FC<{ className?: string; style?: React.CSSProperties }> = ({ className, style }) => (
   <svg 
     viewBox="0 0 24 24" 
     fill="none" 
@@ -9,6 +9,7 @@ export const Logo: React.FC<{ className?: string }> = ({ className }) => (
     strokeLinecap="round" 
     strokeLinejoin="round" 
     className={className}
+    style={style}
   >
     {/* Funnel style arrows >< separated */}
     <path d="M4 4l6 8-6 8" />

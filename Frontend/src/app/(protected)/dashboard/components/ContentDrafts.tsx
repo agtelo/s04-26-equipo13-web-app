@@ -8,7 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Linkedin, Mail, Twitter, Users } from "lucide-react";
+import { Mail, Twitter, Users } from "lucide-react";
 import { toast } from "sonner";
 import { ChannelTabs } from "./ChannelTabs";
 import { DraftEditor } from "./DraftEditor";
@@ -41,7 +41,7 @@ export function ContentDrafts() {
 
   useEffect(() => {
     if (data) setDrafts(data);
-  }, [data]);
+  }, [data, setDrafts]);
 
   const currentDraft = drafts?.find(
     (d: DraftI) => d.typeContent === activeChannel,

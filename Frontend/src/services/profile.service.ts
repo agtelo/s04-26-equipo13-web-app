@@ -16,7 +16,6 @@ export const ProfileService = async () => {
 
     return data;
   } catch (error) {
-    console.log(error);
     if (error && isAxiosError(error)) {
       throw new Error(error.response?.data.message);
     }

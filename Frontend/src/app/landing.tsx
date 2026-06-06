@@ -38,7 +38,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button asChild size="lg" className="uppercase font-bold">
-              <Link href="/register">Get started</Link>
+              <Link href="/login">Get started</Link>
             </Button>
             <Button variant="outline" size="lg" className="uppercase font-bold">
               Watch demo

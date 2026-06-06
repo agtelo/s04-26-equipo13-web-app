@@ -7,7 +7,8 @@ export const fontPrincipal = Inter({
 });
 
 export const fontSecondary = Playfair_Display({
-  weight: ["500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
-  style: "italic",
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
 });

@@ -11,11 +11,9 @@ export const LoginService = async (values: LoginFormType) => {
       user: { id: number; full_name: string };
       token: string;
     }>(`${process.env.API_URL}/user/login`, values);
-    console.log(data);
     cookieStore.set("token", data.token);
     return data.message;
   } catch (error) {
-    console.log(error);
     if (error && isAxiosError(error)) {
       throw new Error(error.response?.data.message);
     }

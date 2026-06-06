@@ -29,7 +29,6 @@ export function CommunityFeed() {
 
   const query = useQueryClient();
 
-  // Mutation to generate drafts
   const { mutate: generateDrafts, isPending: isGenerating } = useMutation({
     mutationFn: GenerationDraftNew,
     onError: (error) => {
@@ -43,25 +42,21 @@ export function CommunityFeed() {
     },
   });
 
-  // Mutation to collect messages
   const { mutate: collectMessages, isPending: isCollecting } = useMutation({
     mutationFn: TriggerCollectionService,
     onError: (error) => {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      // Refetch community feed after collection
       refetch();
       toast.success(`${data.messageCount} messages collected successfully`);
     },
   });
 
-  // Handle refresh: collect new messages from Discord
   const handleRefresh = () => {
     collectMessages();
   };
 
-  // Handle generate: create AI drafts with collected messages
   const handleAIGenerate = () => {
     if (activities.length === 0) {
       toast.error("No messages available. Click Refresh to collect messages first");
@@ -74,7 +69,7 @@ export function CommunityFeed() {
   const isLoading_ = isGenerating || isCollecting;
 
   return (
-    <div className="p-1.78 flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <Card className="h-210 rounded-[40px] border-none shadow-sm overflow-hidden flex flex-col">
         <CardHeader className="flex flex-row items-center justify-between pb-8 pt-8 px-8">
           <div>
