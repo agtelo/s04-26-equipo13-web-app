@@ -98,6 +98,47 @@ router.get('/auth/linkedin/callback', async (req, res) => {
   }
 });
 
+// Auto-detect LinkedIn personId using token introspection
+router.get('/linkedin/me', async (req, res) => {
+  try {
+    const tokenData = linkedinTokens.get('current');
+
+    if (!tokenData) {
+      return res.status(401).json({ error: 'No LinkedIn token found. Authenticate first at /api/auth/linkedin' });
+    }
+
+    // Use token introspection to get personId (works with any scope)
+    const response = await axios.post(
+      'https://www.linkedin.com/oauth/v2/introspectToken',
+      new URLSearchParams({
+        token: tokenData.accessToken,
+        client_id: process.env.LINKEDIN_CLIENT_ID,
+        client_secret: process.env.LINKEDIN_CLIENT_SECRET
+      }),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
+
+    const { sub, active, scope } = response.data;
+
+    if (!active) {
+      return res.status(401).json({ error: 'Token is no longer active. Re-authenticate.' });
+    }
+
+    console.log('✅ LinkedIn personId found:', sub);
+    console.log('✅ Active scopes:', scope);
+
+    res.json({
+      personId: sub,
+      active,
+      scope,
+      message: `Add this to your .env: LINKEDIN_USER_ID=${sub}`
+    });
+  } catch (error) {
+    console.error('❌ Introspection error:', error.response?.data || error.message);
+    res.status(500).json({ error: error.response?.data || error.message });
+  }
+});
+
 // Get stored token for a user
 router.get('/linkedin/token/:userId', (req, res) => {
   try {
