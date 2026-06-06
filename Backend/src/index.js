@@ -35,23 +35,27 @@ const GUILD_ID = process.env.DISCORD_GUILD_ID;
 const app = express();
 
 // Configure middlewares
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true // Allow credentials (cookies) for CORS
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configure sessions for passport/OAuth
+// Configure sessions for passport/OAuth (MUST be before passport)
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key-change-this',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true, // Allow uninitialized sessions for OAuth state
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
+    sameSite: 'lax', // Required for OAuth redirects
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
-// Initialize Passport
+// Initialize Passport (MUST be after session)
 app.use(passport.initialize());
 app.use(passport.session());
 
