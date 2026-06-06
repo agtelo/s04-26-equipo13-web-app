@@ -1,5 +1,7 @@
-// Root page - protected by proxy.ts middleware
-// Users will be redirected to /dashboard (if authenticated) or /login (if not)
+// Root page shows landing page
+// Proxy middleware handles redirects for authenticated users
+import LandingPage from "./landing";
+
 export default function RootPage() {
-  return null;
+  return <LandingPage />;
 }
