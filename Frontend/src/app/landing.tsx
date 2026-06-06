@@ -42,18 +42,6 @@ export default function LandingPage() {
               Watch demo
             </Button>
           </div>
-
-          <Card className="mt-16">
-            <div className="bg-muted/50 px-4 py-3 flex items-center gap-2 border-b border-border">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-              <div className="flex-1 ml-3 bg-muted rounded px-2 py-1.5 text-xs text-muted-foreground">distiller.app</div>
-            </div>
-            <CardContent className="aspect-video flex items-center justify-center bg-gradient-to-br from-muted to-muted/50 p-0">
-              <p className="text-muted-foreground text-sm">Dashboard preview</p>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
