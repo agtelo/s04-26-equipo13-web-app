@@ -25,18 +25,9 @@ export default function LandingHeader() {
         >
           How it works
         </a>
-        <a
-          href="#"
-          className="text-xs uppercase tracking-wide text-muted-foreground hover:text-foreground transition"
-        >
-          Docs
-        </a>
         <ModeToggle />
         <Button asChild variant="outline" size="sm">
           <Link href="/login">Sign in</Link>
-        </Button>
-        <Button asChild size="sm">
-          <Link href="/register">Start free</Link>
         </Button>
       </div>
     </header>
