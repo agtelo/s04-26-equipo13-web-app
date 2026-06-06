@@ -23,7 +23,7 @@ export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const { control, handleSubmit , formState: { isSubmitting, errors } } = useForm<LoginFormType>({
+  const { control, handleSubmit , formState: { isSubmitting } } = useForm<LoginFormType>({
     resolver: zodResolver(LoginFormSchema),
     mode: "onBlur",
     defaultValues: {
@@ -118,7 +118,7 @@ export const LoginForm = () => {
         <Field orientation="responsive">
           <Button
             type="submit"
-            disabled={isSubmitting || Object.keys(errors).length > 0}
+            disabled={isSubmitting}
             className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all disabled:opacity-50"
           >
             {isSubmitting ? "Signing In..." : "Sign In"}

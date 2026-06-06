@@ -24,7 +24,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useForm<NewPasswordFormType>({
     resolver: zodResolver(NewPasswordFormSchema),
     mode: "onBlur",
@@ -123,7 +123,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
         />
         <Button
           type="submit"
-          disabled={isSubmitting || Object.keys(errors).length > 0}
+          disabled={isSubmitting}
           className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all disabled:opacity-50"
         >
           {isSubmitting ? "Sending..." : "New Password"}
