@@ -8,7 +8,7 @@ const contentDraftSchema = sequelize.define('Content', {
         autoIncrement: true
     },
     typeContent: {
-        type: DataTypes.ENUM('newsletter', 'twitter', 'bluesky')
+        type: DataTypes.ENUM('newsletter', 'twitter', 'bluesky', 'linkedin', 'reddit')
     },
     content: {
         type: DataTypes.TEXT
