@@ -22,7 +22,7 @@ async function generateContent(messages, apiKey) {
     1. **NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)
     2. **TWITTER** (máximo 280 caracteres, directo y con hashtags)
     3. **BLUESKY** (máximo 250 caracteres, directo y con hashtags)
-    4. **LINKEDIN** (máximo 300 caracteres, tono formal y profesional)
+    4. **LINKEDIN** (máximo 280 caracteres, un dato o insight clave de la comunidad, tono profesional, con #hashtag)
     5. **REDDIT** (máximo 200 caracteres, tono casual pero informativo)
 
     Respondé en formato JSON con esta estructura:
@@ -105,7 +105,7 @@ const TYPE_PROMPTS = {
     newsletter: "**NEWSLETTER** (formato largo, 2-3 párrafos, tono profesional)",
     twitter: "**TWITTER** (máximo 280 caracteres, directo y con hashtags)",
     bluesky: "**BLUESKY** (máximo 250 caracteres, directo y con hashtags)",
-    linkedin: "**LINKEDIN** (máximo 300 caracteres, tono formal y profesional)",
+    linkedin: "**LINKEDIN** (máximo 280 caracteres, un dato o insight clave de la comunidad, tono profesional, con #hashtag)",
     reddit: "**REDDIT** (máximo 200 caracteres, tono casual pero informativo)"
 };
 
