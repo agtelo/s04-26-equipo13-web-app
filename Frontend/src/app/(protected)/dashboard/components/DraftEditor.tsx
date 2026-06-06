@@ -1,4 +1,4 @@
-import { Copy, CheckCircle2, Sparkles, StarIcon } from "lucide-react";
+import { Copy, CheckCircle2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
@@ -18,7 +18,7 @@ interface DraftEditorProps {
     type: string,
   ) => void;
   isPending: boolean;
-  isPendindRegenerate: boolean;
+  isPendingRegenerate: boolean;
   handleRegenerateDraft: (id: string) => void;
 }
 
@@ -30,7 +30,7 @@ export function DraftEditor({
   onApprove,
   isPending,
   handleRegenerateDraft,
-  isPendindRegenerate,
+  isPendingRegenerate,
 }: DraftEditorProps) {
   const handleCopy = () => {
     navigator.clipboard.writeText(draft.content);
@@ -72,7 +72,7 @@ export function DraftEditor({
             <Copy className="w-4 h-4" /> Copy
           </Button>
           {!draft.is_published &&
-            (!isPendindRegenerate ? (
+            (!isPendingRegenerate ? (
               <Button
                 onClick={() => handleRegenerateDraft(draft.id)}
                 variant="outline"
@@ -84,7 +84,7 @@ export function DraftEditor({
             ) : (
               <Button
                 variant="outline"
-                disabled={isPendindRegenerate}
+                disabled={isPendingRegenerate}
                 className="rounded-full text-[10px] font-black uppercase tracking-widest px-8 h-12 gap-2 group"
               >
                 <Sparkles className="w-4 h-4 text-primary group-hover:scale-110 transition-transform animate-pulse" />

@@ -1,26 +1,28 @@
 import { create } from "zustand";
-import { Draft } from "@/interfaces";
 
-type DraftStore = {
-  drafts: Array<Draft>;
-  setDrafts: (drafts: Array<Draft>) => void;
-  updatedDraftContent: (typeContent: string, content: string) => void;
-  publishDraft: (id: string, content: string) => void;
+type DraftEdits = {
+  [draftId: string]: string; // id -> edited content
 };
 
-export const useDraftStore = create<DraftStore>()((set) => ({
-  drafts: [],
-  setDrafts: (drafts) => set({ drafts }),
-  updatedDraftContent: (typeContent, content) =>
+type DraftStore = {
+  edits: DraftEdits;
+  setEdit: (draftId: string, content: string) => void;
+  clearEdit: (draftId: string) => void;
+  clearAllEdits: () => void;
+  getEdit: (draftId: string) => string | undefined;
+};
+
+export const useDraftStore = create<DraftStore>()((set, get) => ({
+  edits: {},
+  setEdit: (draftId, content) =>
     set((state) => ({
-      drafts: state.drafts.map((draft) =>
-        draft.typeContent === typeContent ? { ...draft, content } : draft,
-      ),
+      edits: { ...state.edits, [draftId]: content },
     })),
-  publishDraft: (id, content) =>
-    set((state) => ({
-      drafts: state.drafts.map((draft) =>
-        draft.id === id ? { ...draft, is_published: true, content } : draft,
-      ),
-    })),
+  clearEdit: (draftId) =>
+    set((state) => {
+      const { [draftId]: _, ...rest } = state.edits;
+      return { edits: rest };
+    }),
+  clearAllEdits: () => set({ edits: {} }),
+  getEdit: (draftId) => get().edits[draftId],
 }));

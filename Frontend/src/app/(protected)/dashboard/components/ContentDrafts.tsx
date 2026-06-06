@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -31,25 +31,22 @@ const CHANNELS = [
 ];
 
 export function ContentDrafts() {
-  const { drafts, setDrafts, updatedDraftContent, publishDraft } =
-    useDraftStore();
+  const { setEdit, clearEdit, getEdit } = useDraftStore();
   const [activeChannel, setActiveChannel] = useState("newsletter");
 
-  const { data, isLoading } = useQuery({
+  const { data: drafts = [], isLoading } = useQuery({
     queryKey: ["contentdraft"],
     queryFn: ContentDraftService,
   });
 
-  useEffect(() => {
-    if (data) setDrafts(data);
-  }, [data, setDrafts]);
-
-  const currentDraft = drafts?.find(
+  const currentDraft = drafts.find(
     (d: Draft) => d.typeContent === activeChannel,
   );
 
   const handleChange = (value: string) => {
-    updatedDraftContent(activeChannel, value);
+    if (currentDraft) {
+      setEdit(currentDraft.id, value);
+    }
   };
 
   const query = useQueryClient();
@@ -60,8 +57,8 @@ export function ContentDrafts() {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      if (data?.id && data?.content) {
-        publishDraft(data.id, data.content);
+      if (data?.id) {
+        clearEdit(data.id);
       }
       query.invalidateQueries({
         queryKey: ["contentdraft"],
@@ -71,13 +68,16 @@ export function ContentDrafts() {
     },
   });
 
-  const { mutate: mutateRegenerate, isPending: isPendindRegenerate } =
+  const { mutate: mutateRegenerate, isPending: isPendingRegenerate } =
     useMutation({
       mutationFn: RegenerateDraft,
       onError: (error) => {
         toast.error(error.message);
       },
       onSuccess: (data) => {
+        if (currentDraft) {
+          clearEdit(currentDraft.id);
+        }
         query.invalidateQueries({
           queryKey: ["contentdraft"],
         });
@@ -132,14 +132,17 @@ export function ContentDrafts() {
           <EmptyDraft />
         ) : (
           <DraftEditor
-            draft={currentDraft}
+            draft={{
+              ...currentDraft,
+              content: getEdit(currentDraft.id) ?? currentDraft.content,
+            }}
             activeChannel={activeChannel}
             channels={CHANNELS}
             onChange={handleChange}
             onApprove={handleApprove}
             isPending={isPending}
             handleRegenerateDraft={handleRegenerateDraft}
-            isPendindRegenerate={isPendindRegenerate}
+            isPendingRegenerate={isPendingRegenerate}
           />
         )}
       </CardContent>
