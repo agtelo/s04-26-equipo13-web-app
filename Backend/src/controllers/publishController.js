@@ -3,6 +3,7 @@ const { publishPost } = require("../publisher/reddit-publisher");
 const { Bluesky } = require("../publisher/bluesky-publisher");
 const { publishEmail } = require("../publisher/email-publisher");
 const { publishLinkedIn } = require("../publisher/linkedin-publisher");
+const linkedinRoutes = require("../routes/linkedinRoutes");
 
 const publishTwitter = async (req, res) => {
 
@@ -83,31 +84,41 @@ const publishNewsletter = async (req, res) => {
 
 const publishLinkedInPost = async (req, res) => {
 
-    const { content, accessToken } = req.body;
+    const { content } = req.body;
 
     if(!content){
         return res.status(400).json({ message: "The 'content' is required" });
     }
 
     try{
-        // Use personId from environment if not provided
         const personId = process.env.LINKEDIN_USER_ID;
 
         if (!personId || personId === 'tu_user_id_aqui') {
             return res.status(400).json({
-                message: "LinkedIn User ID not configured. Update LINKEDIN_USER_ID in .env with your LinkedIn Personal ID"
+                message: "LinkedIn User ID not configured. Update LINKEDIN_USER_ID in .env"
             });
         }
 
-        // If no accessToken provided, return helpful error
-        if (!accessToken) {
+        // Get stored token from OAuth flow
+        const tokenData = linkedinRoutes.getLinkedInToken('current');
+
+        if (!tokenData) {
             return res.status(401).json({
-                message: "LinkedIn authentication required. Please authenticate with LinkedIn first using /api/auth/linkedin",
-                requiresAuth: true
+                message: "LinkedIn not connected. Please authenticate first.",
+                requiresAuth: true,
+                authUrl: "/api/auth/linkedin"
             });
         }
 
-        const result = await publishLinkedIn(content, accessToken, personId);
+        if (tokenData.expiresAt < new Date()) {
+            return res.status(401).json({
+                message: "LinkedIn token expired. Please re-authenticate.",
+                requiresAuth: true,
+                authUrl: "/api/auth/linkedin"
+            });
+        }
+
+        const result = await publishLinkedIn(content, tokenData.accessToken, personId);
 
         return res.status(200).json({ success: true, ...result });
 

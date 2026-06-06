@@ -17,7 +17,7 @@ router.get('/auth/linkedin', (req, res) => {
     response_type: 'code',
     client_id: process.env.LINKEDIN_CLIENT_ID,
     redirect_uri: process.env.LINKEDIN_REDIRECT_URI,
-    scope: 'w_member_social profile', // w_member_social to post, profile to get personId
+    scope: 'w_member_social',
     state: Math.random().toString(36).substring(7) // Simple state token
   });
 
@@ -67,32 +67,25 @@ router.get('/auth/linkedin/callback', async (req, res) => {
 
     console.log('✅ Access token received, expires in:', expires_in);
 
-    // Get user profile
-    console.log('📋 Fetching user profile...');
-
-    const profileResponse = await axios.get(LINKEDIN_API_URL, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        'Accept': 'application/json',
-        'X-Restli-Protocol-Version': '2.0.0' // Required by LinkedIn API
-      }
-    });
+    // Use personId from .env (we don't have profile scope)
+    const personId = process.env.LINKEDIN_USER_ID;
 
     const userData = {
-      linkedinId: profileResponse.data.id,
+      linkedinId: personId,
       accessToken: access_token,
       expiresAt: new Date(Date.now() + expires_in * 1000),
       authenticatedAt: new Date()
     };
 
-    console.log('✅ User authenticated:', userData.linkedinId);
+    console.log('✅ User authenticated, token stored for personId:', personId);
+    console.log('✅ Token expires at:', userData.expiresAt);
 
-    // Store token
-    linkedinTokens.set(userData.linkedinId, userData);
+    // Store token using personId as key
+    linkedinTokens.set('current', userData);
 
     // Redirect to frontend with success
     res.redirect(
-      `http://localhost:3000/dashboard?linkedin_authenticated=true&linkedin_id=${userData.linkedinId}`
+      `http://localhost:3000/dashboard?linkedin_authenticated=true`
     );
   } catch (error) {
     console.error('❌ OAuth error:', error.response?.data || error.message);
