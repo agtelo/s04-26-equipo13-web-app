@@ -23,7 +23,7 @@ export default function LandingPage() {
           </p>
 
           <div className="mb-6 flex justify-center">
-            <Logo className="w-32 h-32 text-primary" />
+            <Logo className="w-32 h-32" style={{ color: 'var(--olive)' }} />
           </div>
 
           <h1 className="text-5xl md:text-7xl [font-family:var(--serif)] italic font-light mb-6 leading-tight">
@@ -137,7 +137,7 @@ export default function LandingPage() {
       <section className="py-20 px-6 bg-muted/50">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mb-6 flex justify-center">
-            <Logo className="w-16 h-16 text-primary" />
+            <Logo className="w-16 h-16" style={{ color: 'var(--olive)' }} />
           </div>
 
           <h2 className="text-4xl md:text-5xl [font-family:var(--serif)] italic font-light mb-4">
