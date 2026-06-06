@@ -25,9 +25,10 @@ export default function FormRegister() {
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<RegisterFormType>({
     resolver: zodResolver(RegisterFormSchema),
+    mode: "onChange",
     defaultValues: {
       fullName: "",
       email: "",
@@ -138,8 +139,8 @@ export default function FormRegister() {
         />
         <Button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all"
+          disabled={isSubmitting || Object.keys(errors).length > 0}
+          className="w-full py-7 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl hover:shadow-2xl transition-all disabled:opacity-50"
         >
           {isSubmitting ? "Creating Account..." : "Create Account"}
         </Button>
