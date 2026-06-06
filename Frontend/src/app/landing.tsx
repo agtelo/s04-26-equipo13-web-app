@@ -165,7 +165,7 @@ export default function LandingPage() {
       <footer className="bg-card px-6 py-8 border-t border-border">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Logo className="w-5 h-5" />
+            <Logo className="w-5 h-5" style={{ color: 'var(--olive)' }} />
             <span className="[font-family:var(--serif)] italic text-sm text-muted-foreground">Distiller</span>
           </div>
 
