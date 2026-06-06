@@ -46,6 +46,9 @@
 }
 
 :root {
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Inter', system-ui, -apple-system, sans-serif;
+
     --background: oklch(0.97 0.01 90); /* #F5F5F0 */
     --foreground: oklch(0.205 0 0); /* #141414 */
     --card: oklch(1 0 0);
