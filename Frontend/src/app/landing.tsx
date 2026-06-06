@@ -28,7 +28,7 @@ export default function LandingPage() {
             <Logo className="w-32 h-32" style={{ color: 'var(--olive)' }} />
           </div>
 
-          <h1 className="text-5xl md:text-7xl [font-family:var(--serif)] italic font-light mb-6 leading-tight">
+          <h1 className="text-5xl md:text-7xl italic font-light mb-6 leading-tight" style={{ fontFamily: 'var(--serif)' }}>
             The AI Content<br />Pipeline for<br />Community.
           </h1>
 
@@ -51,7 +51,7 @@ export default function LandingPage() {
       <section id="how" className="py-20 px-6 bg-muted/50">
         <div className="max-w-6xl mx-auto">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">How it works</p>
-          <h2 className="text-4xl md:text-5xl [font-family:var(--serif)] italic font-light mb-12">
+          <h2 className="text-4xl md:text-5xl italic font-light mb-12" style={{ fontFamily: 'var(--serif)' }}>
             From raw signal to sent<br className="hidden md:block" />newsletter in three steps.
           </h2>
 
@@ -79,7 +79,7 @@ export default function LandingPage() {
               <Card key={i}>
                 <CardContent className="p-8">
                   <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">Step {step.number}</p>
-                  <h3 className="text-2xl [font-family:var(--serif)] italic font-light mb-3">{step.title}</h3>
+                  <h3 className="text-2xl italic font-light mb-3" style={{ fontFamily: 'var(--serif)' }}>{step.title}</h3>
                   <p className="text-muted-foreground text-sm mb-4">{step.description}</p>
                   <span className="inline-flex items-center gap-2 text-xs text-primary bg-primary/10 px-3 py-2 rounded-full">
                     <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
@@ -101,15 +101,15 @@ export default function LandingPage() {
 
               <div className="space-y-8 mb-12">
                 <div className="pb-8 border-b border-border">
-                  <div className="text-5xl [font-family:var(--serif)] italic font-light text-primary mb-2">3×</div>
+                  <div className="text-5xl italic font-light text-primary mb-2" style={{ fontFamily: 'var(--serif)' }}>3×</div>
                   <p className="text-sm uppercase tracking-widest text-muted-foreground">faster to publish than manual curation</p>
                 </div>
                 <div className="pb-8 border-b border-border">
-                  <div className="text-5xl [font-family:var(--serif)] italic font-light text-primary mb-2">50+</div>
+                  <div className="text-5xl italic font-light text-primary mb-2" style={{ fontFamily: 'var(--serif)' }}>50+</div>
                   <p className="text-sm uppercase tracking-widest text-muted-foreground">community signals captured per week</p>
                 </div>
                 <div>
-                  <div className="text-5xl [font-family:var(--serif)] italic font-light text-primary mb-2">1-click</div>
+                  <div className="text-5xl italic font-light text-primary mb-2" style={{ fontFamily: 'var(--serif)' }}>1-click</div>
                   <p className="text-sm uppercase tracking-widest text-muted-foreground">from community feed to approved draft</p>
                 </div>
               </div>
@@ -117,7 +117,7 @@ export default function LandingPage() {
 
             <Card>
               <CardContent className="p-8">
-                <p className="text-2xl [font-family:var(--serif)] italic mb-6 leading-relaxed">
+                <p className="text-2xl italic mb-6 leading-relaxed" style={{ fontFamily: 'var(--serif)' }}>
                   "We were spending two hours every Monday stitching together Discord highlights. Distiller turns that into a ten-minute approval flow — and the drafts are actually good."
                 </p>
                 <div className="flex items-center gap-3">
@@ -142,7 +142,7 @@ export default function LandingPage() {
             <Logo className="w-16 h-16" style={{ color: 'var(--olive)' }} />
           </div>
 
-          <h2 className="text-4xl md:text-5xl [font-family:var(--serif)] italic font-light mb-4">
+          <h2 className="text-4xl md:text-5xl italic font-light mb-4" style={{ fontFamily: 'var(--serif)' }}>
             Start distilling<br />your community.
           </h2>
 
@@ -166,7 +166,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Logo className="w-5 h-5" style={{ color: 'var(--olive)' }} />
-            <span className="[font-family:var(--serif)] italic text-sm text-muted-foreground">Distiller</span>
+            <span className="italic text-sm text-muted-foreground" style={{ fontFamily: 'var(--serif)' }}>Distiller</span>
           </div>
 
           <p className="text-xs text-muted-foreground">Built for community leaders by TalentCircle</p>
