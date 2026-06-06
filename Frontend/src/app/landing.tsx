@@ -4,12 +4,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Logo } from "@/components/shared/Logo";
-import LandingHeader from "@/components/shared/LandingHeader";
+import { ModeToggle } from "@/components/shared/ModeToggle";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <LandingHeader />
+    <div className="min-h-screen bg-background text-foreground relative">
+      <div className="absolute top-6 right-6 z-30">
+        <ModeToggle />
+      </div>
 
       {/* Hero Section */}
       <section className="pt-20 pb-20 px-6 relative overflow-hidden">
