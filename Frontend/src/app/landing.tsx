@@ -18,15 +18,14 @@ export default function LandingPage() {
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-gradient-to-r from-primary/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="mb-12 flex flex-col items-center gap-2">
-            <Logo className="w-12 h-12" style={{ color: 'var(--olive)' }} />
-            <h2 className="text-2xl [font-family:var(--serif)] italic font-light">
-              Distiller
-            </h2>
-            <p className="uppercase text-[10px] font-bold tracking-[0.2em] text-muted-foreground/60 flex flex-col gap-1 items-center">
-              <span>AI Content Pipeline</span>
-              <span className="opacity-75">by TalentCircle</span>
-            </p>
+          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground mb-6">
+            <span className="w-7 h-px bg-border"></span>
+            AI Content Pipeline
+            <span className="w-7 h-px bg-border"></span>
+          </p>
+
+          <div className="mb-6 flex justify-center">
+            <Logo className="w-32 h-32" style={{ color: 'var(--olive)' }} />
           </div>
 
           <h1 className="text-5xl md:text-7xl [font-family:var(--serif)] italic font-light mb-6 leading-tight">
