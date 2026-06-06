@@ -12,7 +12,7 @@ router.get('/auth/linkedin', (req, res, next) => {
   console.log('🍪 Cookies:', req.cookies);
 
   passport.authenticate('linkedin', {
-    scope: ['r_liteprofile', 'w_member_social']
+    scope: ['w_member_social'] // Only request the scope we need
   })(req, res, next);
 });
 

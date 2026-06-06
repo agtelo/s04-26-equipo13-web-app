@@ -5,7 +5,7 @@ passport.use(new LinkedInStrategy({
     clientID: process.env.LINKEDIN_CLIENT_ID,
     clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
     callbackURL: process.env.LINKEDIN_REDIRECT_URI,
-    scope: ['r_liteprofile', 'w_member_social'],
+    scope: ['w_member_social'], // Only request the scope we need
     state: true, // Explicitly enable state parameter for CSRF protection
 }, (accessToken, refreshToken, profile, done) => {
     const user = {
