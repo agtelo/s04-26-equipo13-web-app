@@ -8,7 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Mail, Twitter, Users } from "lucide-react";
+import { Mail, Twitter, Users, Linkedin } from "lucide-react";
 import { toast } from "sonner";
 import { ChannelTabs } from "./ChannelTabs";
 import { DraftEditor } from "./DraftEditor";
@@ -27,6 +27,7 @@ const CHANNELS = [
   { id: "newsletter", name: "Newsletter", icon: Mail, color: "text-blue-500" },
   { id: "bluesky", name: "Bluesky", icon: Users, color: "text-sky-400" },
   { id: "twitter", name: "Twitter (X)", icon: Twitter, color: "text-sky-400" },
+  { id: "linkedin", name: "LinkedIn", icon: Linkedin, color: "text-blue-600" },
 ];
 
 export function ContentDrafts() {
@@ -94,10 +95,11 @@ export function ContentDrafts() {
       id,
       content,
       typeContent: typeContent as
-        | "bluesky"
+        | "newsletter"
         | "twitter"
-        | "reddit"
-        | "newsletter",
+        | "bluesky"
+        | "linkedin"
+        | "reddit",
     });
   };
 

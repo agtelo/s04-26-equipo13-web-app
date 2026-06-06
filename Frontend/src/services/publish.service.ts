@@ -48,6 +48,13 @@ export const PublishDraftService = async (payload: PublishPayload) => {
         { headers },
       );
       publishResult = data;
+    } else if (typeContent === "linkedin") {
+      const { data } = await axios.post(
+        `${process.env.API_URL}/api/publish/linkedin`,
+        { content },
+        { headers },
+      );
+      publishResult = data;
     } else if (typeContent === "reddit") {
       const { data } = await axios.post(
         `${process.env.API_URL}/api/publish/reddit`,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Twitter, Users, Copy, ExternalLink, File } from "lucide-react";
+import { Mail, Twitter, Users, Copy, ExternalLink, File, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -10,12 +10,13 @@ const CHANNELS = [
   { id: "newsletter", name: "Newsletter", icon: Mail, color: "text-blue-500" },
   { id: "bluesky", name: "Bluesky", icon: Users, color: "text-sky-400" },
   { id: "twitter", name: "Twitter (X)", icon: Twitter, color: "text-sky-400" },
+  { id: "linkedin", name: "LinkedIn", icon: Linkedin, color: "text-blue-600" },
 ];
 
 interface HistoryDraftCardProps {
   draft: {
     id: number;
-    typeContent: "newsletter" | "twitter" | "bluesky";
+    typeContent: "newsletter" | "twitter" | "bluesky" | "linkedin" | "reddit";
     content: string;
     createdAt: string;
   };
