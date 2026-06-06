@@ -22,7 +22,8 @@ async function publishLinkedIn(content, accessToken, personId) {
             {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Restli-Protocol-Version': '2.0.0' // Required by LinkedIn API
                 }
             }
         );

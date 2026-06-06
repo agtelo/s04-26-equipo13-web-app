@@ -17,7 +17,7 @@ router.get('/auth/linkedin', (req, res) => {
     response_type: 'code',
     client_id: process.env.LINKEDIN_CLIENT_ID,
     redirect_uri: process.env.LINKEDIN_REDIRECT_URI,
-    scope: 'w_member_social', // Only request the scope we need
+    scope: 'w_member_social profile', // w_member_social to post, profile to get personId
     state: Math.random().toString(36).substring(7) // Simple state token
   });
 
@@ -73,7 +73,8 @@ router.get('/auth/linkedin/callback', async (req, res) => {
     const profileResponse = await axios.get(LINKEDIN_API_URL, {
       headers: {
         Authorization: `Bearer ${access_token}`,
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'X-Restli-Protocol-Version': '2.0.0' // Required by LinkedIn API
       }
     });
 
