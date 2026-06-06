@@ -118,21 +118,34 @@ router.get('/linkedin/me', async (req, res) => {
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
     );
 
-    const { sub, active, scope } = response.data;
+    console.log('✅ LinkedIn introspection response:', JSON.stringify(response.data, null, 2));
 
-    if (!active) {
-      return res.status(401).json({ error: 'Token is no longer active. Re-authenticate.' });
+    // Introspection doesn't return personId, try /v2/me directly
+    try {
+      const meResponse = await axios.get('https://api.linkedin.com/v2/me', {
+        headers: {
+          Authorization: `Bearer ${tokenData.accessToken}`,
+          'X-Restli-Protocol-Version': '2.0.0'
+        }
+      });
+
+      console.log('✅ /v2/me response:', JSON.stringify(meResponse.data, null, 2));
+      const personId = meResponse.data.id;
+
+      return res.json({
+        personId,
+        active: response.data.active,
+        scope: response.data.scope,
+        message: `Add this to your .env: LINKEDIN_USER_ID=${personId}`
+      });
+    } catch (meError) {
+      console.log('⚠️ /v2/me failed:', meError.response?.data);
+      // Return raw introspection if /v2/me fails
+      return res.json({
+        ...response.data,
+        note: '/v2/me failed - profile scope not available'
+      });
     }
-
-    console.log('✅ LinkedIn personId found:', sub);
-    console.log('✅ Active scopes:', scope);
-
-    res.json({
-      personId: sub,
-      active,
-      scope,
-      message: `Add this to your .env: LINKEDIN_USER_ID=${sub}`
-    });
   } catch (error) {
     console.error('❌ Introspection error:', error.response?.data || error.message);
     res.status(500).json({ error: error.response?.data || error.message });
