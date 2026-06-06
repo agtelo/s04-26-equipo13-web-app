@@ -83,13 +83,30 @@ const publishNewsletter = async (req, res) => {
 
 const publishLinkedInPost = async (req, res) => {
 
-    const { content, accessToken, personId } = req.body;
+    const { content, accessToken } = req.body;
 
-    if(!content || !accessToken || !personId){
-        return res.status(400).json({ message: "The 'content', 'accessToken', and 'personId' are required" });
+    if(!content){
+        return res.status(400).json({ message: "The 'content' is required" });
     }
 
     try{
+        // Use personId from environment if not provided
+        const personId = process.env.LINKEDIN_USER_ID;
+
+        if (!personId || personId === 'tu_user_id_aqui') {
+            return res.status(400).json({
+                message: "LinkedIn User ID not configured. Update LINKEDIN_USER_ID in .env with your LinkedIn Personal ID"
+            });
+        }
+
+        // If no accessToken provided, return helpful error
+        if (!accessToken) {
+            return res.status(401).json({
+                message: "LinkedIn authentication required. Please authenticate with LinkedIn first using /api/auth/linkedin",
+                requiresAuth: true
+            });
+        }
+
         const result = await publishLinkedIn(content, accessToken, personId);
 
         return res.status(200).json({ success: true, ...result });

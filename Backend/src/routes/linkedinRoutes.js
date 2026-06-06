@@ -65,4 +65,6 @@ router.get('/linkedin/token/:userId', (req, res) => {
   }
 });
 
+// Export tokens store for use in other modules
 module.exports = router;
+module.exports.getLinkedInToken = (userId) => linkedinTokens.get(userId);
