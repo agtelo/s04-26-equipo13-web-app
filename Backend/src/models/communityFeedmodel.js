@@ -27,10 +27,7 @@ const communityFeedSchema = sequelize.define('CommunityFeed', {
     reactions: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        references: {
-            model: 'GenerationLogs',
-            key: 'id'
-        }
+        defaultValue: 0
     }
 },
 {
