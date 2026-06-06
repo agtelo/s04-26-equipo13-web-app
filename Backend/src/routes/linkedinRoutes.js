@@ -11,9 +11,7 @@ router.get('/auth/linkedin', (req, res, next) => {
   console.log('📦 Session:', req.sessionID);
   console.log('🍪 Cookies:', req.cookies);
 
-  passport.authenticate('linkedin', {
-    scope: ['w_member_social'] // Only request the scope we need
-  })(req, res, next);
+  passport.authenticate('linkedin')(req, res, next);
 });
 
 // Ruta 2: Callback (LinkedIn redirige aquí)
