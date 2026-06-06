@@ -1,1 +1,1 @@
-export * from './new-password.form.type'
+export { default as NewPasswordForm } from "./new-password-form";

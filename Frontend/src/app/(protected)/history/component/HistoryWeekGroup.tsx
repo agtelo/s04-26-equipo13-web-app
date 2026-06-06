@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion";
 import { HistoryDraftCard } from "./HistoryDraftCard";
+import { ApprovedDraft } from "@/interfaces";
 
 interface HistoryWeekGroupProps {
   weekId: string;
-  weekDrafts: any[];
+  weekDrafts: ApprovedDraft[];
 }
 
 export function HistoryWeekGroup({ weekId, weekDrafts }: HistoryWeekGroupProps) {

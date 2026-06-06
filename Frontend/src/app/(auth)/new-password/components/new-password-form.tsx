@@ -9,16 +9,14 @@ import {
   FieldLabel,
   FieldError,
 } from "@/components/ui/field";
-import {
-  NewPasswordFormSchema,
-  NewPasswordFormType,
-} from "./new-password.form.type";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { NewPasswordService } from "@/services/newPassword.service";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { NewPasswordFormSchema } from "@/schema";
+import { NewPasswordFormType } from "@/interfaces";
 
 export default function NewPasswordForm({ token }: { token: string }) {
   const router = useRouter();
@@ -46,12 +44,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
   });
 
   const onSubmit = (data: NewPasswordFormType) => {
-    // Aquí va la lógica de llamar a API
-    const values = {
-      password: data.password,
-      token: token,
-    };
-    mutate(values);
+    mutate({ password: data.password, token });
   };
 
   return (
@@ -127,7 +120,6 @@ export default function NewPasswordForm({ token }: { token: string }) {
             </Field>
           )}
         />
-
         <Button
           type="submit"
           disabled={isSubmitting}

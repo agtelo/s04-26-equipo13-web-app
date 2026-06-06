@@ -1,1 +1,1 @@
-export * from './forgot-password.form.type'
+export { default as ForgotPasswordForm } from "./forgot-password-form";

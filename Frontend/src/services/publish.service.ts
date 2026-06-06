@@ -1,15 +1,10 @@
 "use server";
 
+import { PublishPayload } from "@/interfaces";
 import axios, { isAxiosError } from "axios";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { ProfileService } from "./profile.service";
-
-interface PublishPayload {
-  id: string | number;
-  content: string;
-  typeContent: "bluesky" | "twitter" | "reddit" | "newsletter";
-}
 
 export const PublishDraftService = async (payload: PublishPayload) => {
   const cookieStore = await cookies();

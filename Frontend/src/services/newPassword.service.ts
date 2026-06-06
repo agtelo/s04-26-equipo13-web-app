@@ -1,13 +1,9 @@
 "use server";
 
+import { NewPasswordPayload } from "@/interfaces";
 import axios, { isAxiosError } from "axios";
 
-interface Props {
-  password: string;
-  token: string;
-}
-
-export const NewPasswordService = async ({ password, token }: Props) => {
+export const NewPasswordService = async ({ password, token }: NewPasswordPayload) => {
   try {
     const { data } = await axios.post<{ message: string }>(
       `${process.env.API_URL}/user/reset-password`,

@@ -9,13 +9,11 @@ import {
   FieldLabel,
   FieldError,
 } from "@/components/ui/field";
-import {
-  ForgotPasswordFormSchema,
-  ForgotPasswordFormType,
-} from "./forgot-password.form.type";
 import { useMutation } from "@tanstack/react-query";
 import { forgotPasswordService } from "@/services/forgot.service";
 import { toast } from "sonner";
+import { ForgotPasswordFormSchema } from "@/schema";
+import { ForgotPasswordFormType } from "@/interfaces";
 
 export default function ForgotPasswordForm() {
   const {
@@ -40,8 +38,6 @@ export default function ForgotPasswordForm() {
   });
 
   const onSubmit = (data: ForgotPasswordFormType) => {
-    console.log("Enviando:", data);
-    // Aquí va la lógica de llamar a API
     mutate(data.email);
   };
 
@@ -81,4 +77,3 @@ export default function ForgotPasswordForm() {
     </form>
   );
 }
-
