@@ -63,6 +63,9 @@ export function ContentDrafts() {
       query.invalidateQueries({
         queryKey: ["contentdraft"],
       });
+      query.invalidateQueries({
+        queryKey: ["approved-drafts"],
+      });
 
       toast.success(data?.message || "Publicado ✅");
     },
