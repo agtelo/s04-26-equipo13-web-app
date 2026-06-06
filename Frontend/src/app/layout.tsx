@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { fontPrincipal } from "@/utils/font";
+import { fontPrincipal, fontSecondary } from "@/utils/font";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${fontPrincipal.className} antialiased`}>
+      <body className={`${fontPrincipal.className} ${fontSecondary.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
