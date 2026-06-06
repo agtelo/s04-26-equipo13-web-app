@@ -83,14 +83,14 @@ const publishNewsletter = async (req, res) => {
 
 const publishLinkedInPost = async (req, res) => {
 
-    const { content } = req.body;
+    const { content, accessToken, personId } = req.body;
 
-    if(!content){
-        return res.status(400).json({ message: "The content is required" });
+    if(!content || !accessToken || !personId){
+        return res.status(400).json({ message: "The 'content', 'accessToken', and 'personId' are required" });
     }
 
     try{
-        const result = await publishLinkedIn(content);
+        const result = await publishLinkedIn(content, accessToken, personId);
 
         return res.status(200).json({ success: true, ...result });
 

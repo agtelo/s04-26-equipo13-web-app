@@ -1,47 +1,41 @@
-// LinkedIn publisher - placeholder for future implementation
-// LinkedIn API requires OAuth 2.0 and sign-in with LinkedIn credentials
+const axios = require('axios');
 
-// const { LinkedInAPI } = require("linkedin-api-v2");
+async function publishLinkedIn(content, accessToken, personId) {
+    try {
+        const response = await axios.post(
+            'https://api.linkedin.com/v2/ugcPosts',
+            {
+                author: `urn:li:person:${personId}`,
+                lifecycleState: 'PUBLISHED',
+                specificContent: {
+                    'com.linkedin.ugc.ShareContent': {
+                        shareCommentary: {
+                            text: content
+                        },
+                        shareMediaCategory: 'NONE'
+                    }
+                },
+                visibility: {
+                    'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+                }
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
 
-// const client = new LinkedInAPI({
-//     accessToken: process.env.LINKEDIN_ACCESS_TOKEN,
-// });
-
-const client = null;
-
-async function publishLinkedIn(content) {
-    if (!client) {
         return {
-            id: `linkedin_${Date.now()}`,
-            url: "LinkedIn not configured - placeholder response",
-            message: "LinkedIn publish functionality will be implemented with OAuth 2.0"
+            id: response.data.id,
+            url: `https://www.linkedin.com/feed/update/${response.data.id}`,
+            success: true
         };
+    } catch (error) {
+        console.error('Error publishing to LinkedIn:', error.response?.data);
+        throw new Error(error.response?.data?.message || 'Failed to publish to LinkedIn');
     }
-
-    // Placeholder for actual LinkedIn API call
-    // const post = await client.posts.create({
-    //     author: `urn:li:person:${process.env.LINKEDIN_PERSON_ID}`,
-    //     lifecycleState: "PUBLISHED",
-    //     specificContent: {
-    //         "com.linkedin.ugc.ShareContent": {
-    //             shareCommentary: { text: content },
-    //             shareMediaCategory: "NONE",
-    //         }
-    //     },
-    //     visibility: { "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC" }
-    // });
-
-    return {
-        id: null,
-        url: "LinkedIn no configurado - falta de credenciales OAuth 2.0",
-        message: "LinkedIn publish functionality will be implemented with OAuth 2.0"
-    };
 }
 
 module.exports = { publishLinkedIn };
-
-// To implement LinkedIn publishing:
-// 1. Register app at https://www.linkedin.com/developers/apps
-// 2. Configure OAuth 2.0 credentials in .env
-// 3. Add LINKEDIN_ACCESS_TOKEN and LINKEDIN_PERSON_ID env vars
-// 4. Uncomment and use the linkedin-api-v2 library

@@ -4,6 +4,8 @@ require("dotenv").config();
 const express = require("express");
 const cron = require("node-cron");
 const cors = require("cors");
+const session = require("express-session");
+const passport = require("passport");
 
 // Import services
 const { collectAndSaveMessages } = require('./services/collectionService');
@@ -17,6 +19,10 @@ const draftRoutes = require("./routes/draftRoutes");
 const generationRoutes = require("./routes/generationRoutes");
 const communityFeedRoutes = require("./routes/communityFeedRoutes");
 const collectionRoutes = require("./routes/collectionRoutes");
+const linkedinRoutes = require('./routes/linkedinRoutes');
+
+// Import LinkedIn OAuth config
+require('./config/linkedin');
 
 // Import database
 const sequelize = require("./config/database");
@@ -33,6 +39,22 @@ app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Configure sessions for passport/OAuth
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-this',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Register routes
 app.use("/user", userRoutes);
 app.use("/api", publishRoutes);
@@ -41,6 +63,7 @@ app.use("/drafts", draftRoutes);
 app.use("/api", regenerateRoutes);
 app.use("/community-feed", communityFeedRoutes);
 app.use("/collection", collectionRoutes);
+app.use("/api", linkedinRoutes);
 
 // Start server
 async function startServer() {
