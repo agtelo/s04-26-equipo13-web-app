@@ -25,7 +25,7 @@ export const LoginForm = () => {
 
   const { control, handleSubmit , formState: { isSubmitting, errors } } = useForm<LoginFormType>({
     resolver: zodResolver(LoginFormSchema),
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       email: "",
       password: "",

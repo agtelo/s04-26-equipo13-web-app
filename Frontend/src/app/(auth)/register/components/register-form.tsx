@@ -28,7 +28,7 @@ export default function FormRegister() {
     formState: { isSubmitting, errors },
   } = useForm<RegisterFormType>({
     resolver: zodResolver(RegisterFormSchema),
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       fullName: "",
       email: "",

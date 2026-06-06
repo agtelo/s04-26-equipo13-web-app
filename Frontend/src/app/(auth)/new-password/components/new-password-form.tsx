@@ -27,7 +27,7 @@ export default function NewPasswordForm({ token }: { token: string }) {
     formState: { isSubmitting, errors },
   } = useForm<NewPasswordFormType>({
     resolver: zodResolver(NewPasswordFormSchema),
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       password: "",
     },
