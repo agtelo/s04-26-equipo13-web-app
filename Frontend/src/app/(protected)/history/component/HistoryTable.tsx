@@ -9,9 +9,10 @@ import { HistoryWeekGroup } from "./HistoryWeekGroup";
 import { HistoryEmpty } from "./HistoryEmpty";
 import { HistoryTableSkeleton } from "@/components/shared/skeletons/HistoryTableSkeleton";
 import Link from "next/link";
+import { ApprovedDraft } from "@/interfaces";
 
 interface HistoryTableProps {
-  groupedDrafts: Record<string, any[]>;
+  groupedDrafts: Record<string, ApprovedDraft[]>;
   isLoading: boolean;
 }
 

@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Channel, DraftI } from "@/interfaces";
+import { Channel, Draft } from "@/interfaces";
 import { ModalApprovedDraft } from "@/components/shared";
 
 interface DraftEditorProps {
-  draft: DraftI;
+  draft: Draft;
   activeChannel: string;
   channels: Channel[];
   onChange: (value: string) => void;

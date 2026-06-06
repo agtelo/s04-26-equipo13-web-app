@@ -1,6 +1,6 @@
 "use server";
 
-import { DraftI } from "@/interfaces";
+import { Draft } from "@/interfaces";
 import axios, { isAxiosError } from "axios";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 export const ContentDraftService = async () => {
   const cookieStore = await cookies();
   try {
-    const res = await axios<Array<DraftI>>(`${process.env.API_URL}/drafts`, {
+    const res = await axios<Array<Draft>>(`${process.env.API_URL}/drafts`, {
       headers: {
         Authorization: `Bearer ${cookieStore.get("token")?.value}`,
       },

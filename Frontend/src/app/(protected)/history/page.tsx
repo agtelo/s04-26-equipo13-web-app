@@ -1,7 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { GetApprovedDraftsService, ApprovedDraft } from "@/services/history.service";
+import { ApprovedDraft } from "@/interfaces";
+import { GetApprovedDraftsService } from "@/services/history.service";
 import { HistoryTable } from "./component/HistoryTable";
 import { toast } from "sonner";
 

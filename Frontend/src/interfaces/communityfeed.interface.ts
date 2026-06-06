@@ -1,4 +1,4 @@
-export interface CommunityFeedI {
+export interface CommunityFeedResponse {
   user_name: string;
   content: string;
   channel_name: string;

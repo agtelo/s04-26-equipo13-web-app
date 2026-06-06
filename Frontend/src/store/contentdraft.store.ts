@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { DraftI } from "@/interfaces";
+import { Draft } from "@/interfaces";
 
 type DraftStore = {
-  drafts: Array<DraftI>;
-  setDrafts: (drafts: Array<DraftI>) => void;
+  drafts: Array<Draft>;
+  setDrafts: (drafts: Array<Draft>) => void;
   updatedDraftContent: (typeContent: string, content: string) => void;
   publishDraft: (id: string, content: string) => void;
 };
@@ -20,7 +20,7 @@ export const useDraftStore = create<DraftStore>()((set) => ({
   publishDraft: (id, content) =>
     set((state) => ({
       drafts: state.drafts.map((draft) =>
-        draft.id === id ? { ...draft, isPublished: true, content } : draft,
+        draft.id === id ? { ...draft, is_published: true, content } : draft,
       ),
     })),
 }));

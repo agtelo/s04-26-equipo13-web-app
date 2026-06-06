@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { ChannelTabs } from "./ChannelTabs";
 import { DraftEditor } from "./DraftEditor";
 import { EmptyDraft } from "./DraftEmpty";
-import { DraftI } from "@/interfaces";
+import { Draft } from "@/interfaces";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ContentDraftService,
@@ -44,7 +44,7 @@ export function ContentDrafts() {
   }, [data, setDrafts]);
 
   const currentDraft = drafts?.find(
-    (d: DraftI) => d.typeContent === activeChannel,
+    (d: Draft) => d.typeContent === activeChannel,
   );
 
   const handleChange = (value: string) => {
